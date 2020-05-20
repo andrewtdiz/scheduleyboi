@@ -26,11 +26,12 @@
 
           </div>
       </div>
-      <!-- <div v-for="week in weeks" :key="week" class="flex justify-around py-2" style="width: 50px">
-          <div v-for="day in week" :key="day" class=""> 
-              <p class="text-sm">Day</p>
+      <div v-for="(week, ind) in calendar" :key="ind+50" class="flex justify-around mt-6">
+          <div v-for="(day, ind2) in week" :key="ind2+100" class="flex select-none justify-center" :class="dateStyle[day.type+1]" style="width: 50px">
+            <p class="text-sm" >{{day.number}}</p>
+
           </div>
-      </div> -->
+      </div>
   </div>
 </template>
 
@@ -40,42 +41,59 @@ export default {
     data () {
         return {
             days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            calendar: []
+            calendar: [],
+            dateStyle: ['text-red-500', 'text-green-500', 'text-gray-800', 'text-gray-800']
         }
     },
     methods: {
         daysInMonth (year, month) {
             return new Date(year, month, 0).getDate();
         },
-        firstDayOfWeek (year, month, day) {
+        firstDayOfWeek (year, month, day, weekday) {
             if(day<8) {
                 let prevMonthDays = this.daysInMonth(year, month-1)
-                prevMonthDays = prevMonthDays.splice(prevMonthDays.length - new Date().getDay())
+                return prevMonthDays[prevMonthDays.length - 1 - weekday]
+            } else {
+                return day - weekday
             }
-            let prevMonthDays = this.daysInMonth()
         },
     },
     mounted () {
-        let currentYear = new Date().getFullYear()
+        let currentYear = 2020
         let currentMonth = new Date().getMonth()+1
         let currentDay = new Date().getDate()
-        let monthDays = this.daysInMonth(2020, currentMonth)
+        let weekDay = new Date().getDay()
+        let lastMonthLength = this.daysInMonth(currentYear,currentMonth-1)
+        let nextMonthLength = this.daysInMonth(currentYear,currentMonth+1)
         let arr = []
+        let firstDay = this.firstDayOfWeek(currentYear, currentMonth, currentDay, weekDay)
+        
+        let lastMonth = (currentDay<8)
+        let nextMonth = false
+        let inc = 1
 
-        for(let i=0; i<28; i++) {
-            if(i%7==0) arr = []
-            arr.push(currentDay==0 ? {
-                number: this.days[currentDay], 
-                type: 0
-            } : {
-                number: this.firstDayOfWeek(currentYear, currentMonth, currentDay), 
-                type: -1
+        for(let i=0; i<29; i++) {
+            if((i%7==0 && i!=0)) {
+                this.calendar.push(arr)
+                arr = []
+            }
+            arr.push({
+                number: nextMonth ? inc : firstDay+i, 
+                type: (firstDay+i<currentDay) ? -1 : nextMonth ? 2 : currentDay==firstDay+i ? 0  : 1
             })
+            if(nextMonth) inc++
+            if(lastMonthLength == firstDay+i) {
+                lastMonth = false
+            }
+            window.console.log(lastMonth)
+            if(nextMonthLength == firstDay+i) {
+                nextMonth = true
+            }
 
         }
 
         
-    },
+    }
 }
 </script>
 
