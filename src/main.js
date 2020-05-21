@@ -5,9 +5,16 @@ import store from './store'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { formatDistance, subDays } from 'date-fns'
+
+Vue.component(formatDistance)
+Vue.component(subDays)
+
+ 
 
 library.add(faCaretRight)
 library.add(faCaretLeft)
+
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

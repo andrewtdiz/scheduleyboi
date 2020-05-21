@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white" style="width: 500px; height: 400px">
+  <div class="bg-white" style="width: 400px;">
       <div v-if="step==0" class="w-full h-full flex flex-col rounded">
             <p class="font-medium text-2xl"> <span class="font-bold mr-2">Step 1:</span>Name and Date</p>
             

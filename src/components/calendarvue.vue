@@ -1,18 +1,22 @@
 <template>
   <div class="flex flex-col w-full">
       <div class="w-full flex items-center text-black">
-          <div class="rounded flex w-full justify-center items-center px-3 cursor-pointer text-gray-900 hover:text-black">
-            <div class="justify-center flex text-gray-600 items-center hover:bg-gray-400 hover:text-black h-6 w-6 rounded-full">
-                <font-awesome-icon :icon="['fas', 'caret-left']" class=""/>
+          <div  class="rounded flex w-full justify-center items-center px-3 cursor-pointer text-gray-900 hover:text-black">
+            <div v-if="!canMoveLeft" class="opacity-0 justify-center flex text-gray-800 items-center h-6 w-6 rounded-full">
+                <font-awesome-icon :icon="['fas', 'caret-left']" />
+
+            </div>
+            <div @click="prevMonth" v-if="canMoveLeft" class="justify-center flex text-gray-800 items-center hover:bg-gray-400 hover:text-black h-6 w-6 rounded-full">
+                <font-awesome-icon :icon="['fas', 'caret-left']" />
 
             </div>
 
-            <div class="flex justify-center">
-                <p class="hover:bg-gray-200 rounded font-medium text-xl px-4 mx-4 py-2 cursor-pointer">May 2020</p>
+            <div class="flex justify-center w-64">
+                <p class="hover:bg-gray-200rounded font-medium text-xl px-4 mx-4 py-2 cursor-pointer">{{monthViewing}}</p>
 
             </div>
             
-            <div class="justify-center flex text-gray-600 items-center hover:bg-gray-400 hover:text-black h-6 w-6 rounded-full">
+            <div @click="nextMonth" class="justify-center flex text-gray-800 items-center hover:bg-gray-400 hover:text-black h-6 w-6 rounded-full">
                 <font-awesome-icon :icon="['fas', 'caret-right']" class=""/>
 
             </div>
@@ -26,77 +30,54 @@
 
           </div>
       </div>
-      <div v-for="(week, ind) in calendar" :key="ind+50" class="flex justify-around mt-6">
-          <div v-for="(day, ind2) in week" :key="ind2+100" class="flex select-none justify-center" :class="dateStyle[day.type+1]" style="width: 50px">
-            <p class="text-sm" >{{day.number}}</p>
 
-          </div>
-      </div>
+      <CalendarDisplay :today="today" :monthViewing="monthViewing" />
+      
+      
   </div>
 </template>
 
 <script>
+// let moment = require('moment')
+
+import CalendarDisplay from './calendardisplay.vue'
 export default {
     name: 'CalendarVue',
+    components: {
+        CalendarDisplay
+    },
     data () {
         return {
             days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            calendar: [],
-            dateStyle: ['text-red-500', 'text-green-500', 'text-gray-800', 'text-gray-800']
+            selected: [],
+            monthViewing: undefined,
+            today: undefined,
         }
     },
     methods: {
-        daysInMonth (year, month) {
-            return new Date(year, month, 0).getDate();
-        },
-        firstDayOfWeek (year, month, day, weekday) {
-            if(day<8) {
-                let prevMonthDays = this.daysInMonth(year, month-1)
-                return prevMonthDays[prevMonthDays.length - 1 - weekday]
-            } else {
-                return day - weekday
-            }
-        },
+
     },
-    mounted () {
-        let currentYear = 2020
-        let currentMonth = new Date().getMonth()+1
-        let currentDay = new Date().getDate()
-        let weekDay = new Date().getDay()
-        let lastMonthLength = this.daysInMonth(currentYear,currentMonth-1)
-        let nextMonthLength = this.daysInMonth(currentYear,currentMonth+1)
-        let arr = []
-        let firstDay = this.firstDayOfWeek(currentYear, currentMonth, currentDay, weekDay)
+    created () {
         
-        let lastMonth = (currentDay<8)
-        let nextMonth = false
-        let inc = 1
-
-        for(let i=0; i<29; i++) {
-            if((i%7==0 && i!=0)) {
-                this.calendar.push(arr)
-                arr = []
-            }
-            arr.push({
-                number: nextMonth ? inc : firstDay+i, 
-                type: (firstDay+i<currentDay) ? -1 : nextMonth ? 2 : currentDay==firstDay+i ? 0  : 1
-            })
-            if(nextMonth) inc++
-            if(lastMonthLength == firstDay+i) {
-                lastMonth = false
-            }
-            window.console.log(lastMonth)
-            if(nextMonthLength == firstDay+i) {
-                nextMonth = true
-            }
-
-        }
-
+    },
+    computed: {
+        
+        
+    },
+    watch: {
         
     }
 }
 </script>
 
 <style>
-
+.select-none {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
 </style>
