@@ -10,7 +10,7 @@
 </template>
 
 <script>
-let moment = require('moment')
+// let moment = require('moment')
 
 
 export default {
@@ -22,8 +22,6 @@ export default {
             base: undefined,
             calendar: [],
             today: undefined,
-            temp: undefined, 
-            temp2: undefined,
         }
     },
     created () {
