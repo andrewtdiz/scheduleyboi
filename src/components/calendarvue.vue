@@ -12,7 +12,7 @@
             </div>
 
             <div class="flex justify-center w-64 select-none ">
-                <p class="hover:bg-gray-200 rounded font-medium text-xl px-4 mx-4 py-2 cursor-pointer">{{monthViewingDisplay}}</p>
+                <button class="hover:bg-gray-200 rounded font-medium text-xl px-4 mx-4 py-2 cursor-pointer">{{monthViewingDisplay}}</button>
 
             </div>
             
@@ -25,8 +25,8 @@
 
       </div>
       <div class="flex justify-around mt-6">
-          <div v-for="day in days" :key="day" class="flex select-none justify-center" style="width: 50px">
-            <p class="text-sm" >{{day}}</p>
+          <div v-for="day in days" :key="day" class="flex justify-center" style="width: 50px">
+            <p class="text-sm select-none" >{{day}}</p>
 
           </div>
       </div>
