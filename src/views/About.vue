@@ -1,5 +1,19 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="pt-16 bg-gray-100 w-full h-screen">
+    <h1>1</h1>
   </div>
 </template>
+
+<script>
+export default {
+  computed: {
+    eventName () {
+      return this.$store.getters.getEventName
+    }
+  },
+}
+</script>
+
+<style>
+
+</style>

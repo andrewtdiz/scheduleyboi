@@ -97,7 +97,6 @@ export default {
                 this.previousStart = this.startDragDate.clone()
                 this.previousDate = date.clone()
                 this.changeSelects(this.previousStart, this.previousDate, 0)
-                window.console.log(this.previousStart.clone().date(), this.previousDate.clone().date())
                 this.changeSelects(this.startDragDate, date, 1)
             } else if (this.dragging == 0) {
                 this.changeSelects(this.startDragDate, date, 0)
@@ -115,7 +114,6 @@ export default {
                     else if(!change) {
                         for(let k=0; k<this.selected.length; k++) {
                             if(this.selected[k].isSame(dragstart.clone().add(i, 'weeks').add(j, 'days'))) {
-                                window.console.log(this.selected[k].clone().date(), dragstart.clone().add(i, 'weeks').add(j, 'days').date(), ' are the same')
                                 this.selected.splice(k,1)
                                 break
                             }
