@@ -1,11 +1,12 @@
 <template>
   <div  @mouseleave="dragging = -1" @mouseup="dragging = -1" class="mt-2 flex flex-col w-full justify-center w-3/4 select-none">
         <div v-for="(week, ind) in calendar" :key="ind+50" class="flex select-none justify-around">
-            <div @mouseenter="handleDrag(day.date)" @mousedown="startDrag(day.date)" v-for="(day, ind2) in week" :key="ind2+100" class="flex box select-none noselect cursor-pointer items-center justify-center justify-center" :class="dateStyle[day.type]">
+            <div @mouseenter="handleDrag(day.date)" @mousedown="startDrag(day.date)" v-for="(day, ind2) in week" :key="ind2+100" class="flex w-16 h-16 my-1 select-none noselect cursor-pointer items-center justify-center justify-center" :class="dateStyle[day.type]">
                 <h1 class="text-xl font-medium cursor-pointer select-none noselect" style="user-select: none !important;" >{{day.date.date()}}</h1>
 
             </div>
         </div>
+        <h1 class="text-red-500" v-if="selectedLengthError">Please select less than 10 days</h1>
     </div>
 </template>
 
@@ -18,7 +19,15 @@ export default {
     props: ['monthViewing', 'today'],
     data() {
         return {
-            dateStyle: [['text-gray-300', 'cursor-not-allowed'], ['text-gray-700', 'hover:z-10'], ['text-gray-700', 'hover:bg-gray-100','hover:z-10'], ['text-indigo-600', 'bg-indigo-200', 'hover:z-10'], ['text-gray-400']],
+            dateStyle: [
+                ['text-gray-300', 'cursor-not-allowed'], 
+                ['text-gray-700', 'hover:bg-indigo-100', 'anim-cal', 'hover:z-10'], 
+                ['text-white', 'anim-cal', 'bg-indigo-500', 'rounded-l', 'hover:z-10'], 
+                ['text-white', 'anim-cal', 'bg-indigo-500', 'hover:z-10'], 
+                ['text-white', 'anim-cal', 'bg-indigo-500', 'rounded-r', 'hover:z-10'], 
+                ['text-white', 'anim-cal', 'rounded-l', 'rounded-r', 'bg-indigo-500', 'hover:z-10'], 
+                ['text-gray-400'],
+            ],
             base: undefined,
             calendar: [],
             selected: [],
@@ -26,6 +35,7 @@ export default {
             dragging: -1,
             previousStart: undefined,
             previousDate: undefined,
+            selectedLengthError: false,
         }
     },
     created () {
@@ -45,7 +55,7 @@ export default {
             this.calendar = []
             let arr = []
             if(this.monthViewing.isSame(this.today, 'month')) {
-                this.base = this.today.clone().startOf('month').startOf('week');
+                this.base = this.today.clone().subtract(1,'week').startOf('week');
             } else {
                 this.base = this.monthViewing.clone().startOf('week');
             }
@@ -54,6 +64,9 @@ export default {
                 rows = 6
             } else {
                 rows = 5
+            }
+            if(this.monthViewing.isSame(this.today, 'month')) {
+                rows = this.today.clone().endOf('month').diff(this.today, 'weeks')+2
             }
             for(let i=0; i<rows*7; i++) {
                 arr.push({
@@ -76,8 +89,15 @@ export default {
         },
         selectDate (date) {
             
-            if(!(date.clone().diff(this.today.clone(), 'days') <= -1) && !this.selectedContains(date)) this.selected.push(date)
-            else {
+            if(!(date.clone().diff(this.today.clone(), 'days') <= -1) && !this.selectedContains(date)) {
+                if(this.selected.length > 10 ){
+                    this.selectedLengthError = true
+                    return 
+                } else {
+                    this.selectedLengthError = false
+                }
+                this.selected.push(date)
+            } else {
                  for(let i=0; i<this.selected.length; i++) {
                     if (date.clone().isSame(this.selected[i], 'days')) {
                         this.selected.splice(i,1)
@@ -89,6 +109,7 @@ export default {
 
         },
         startDrag(date){
+            
             this.dragging = this.selectDate(date)
             this.startDragDate = date
         },
@@ -96,7 +117,6 @@ export default {
             if (this.dragging ==1) {
                 this.previousStart = this.startDragDate.clone()
                 this.previousDate = date.clone()
-                this.changeSelects(this.previousStart, this.previousDate, 0)
                 this.changeSelects(this.startDragDate, date, 1)
             } else if (this.dragging == 0) {
                 this.changeSelects(this.startDragDate, date, 0)
@@ -110,6 +130,10 @@ export default {
                 let j = daysSpanned
                 let doubleBreak = false
                 while(!doubleBreak) {
+                    if(this.selected.length > 10) {
+                        this.selectedLengthError = true
+                        break
+                    }
                     if(change && !this.selectedContains(dragstart.clone().add(i, 'weeks').add(j, 'days'))) this.selected.push(dragstart.clone().add(i, 'weeks').add(j, 'days'))
                     else if(!change) {
                         for(let k=0; k<this.selected.length; k++) {
@@ -119,6 +143,7 @@ export default {
                             }
                         }
                     }
+                    
 
                     if(i==0 && j==0) doubleBreak = true
                     if(j==0) {
@@ -130,23 +155,40 @@ export default {
 
                 }
 
-                // let handler = false
-                // for(let i=0; i<this.selected.length; i++) {
-                //     if (date.clone().isSame(this.selected[i], 'days')) {
-                //         handler = true
-                //     }
-                // }
-                // if(!handler && !(date.clone().diff(this.today.clone(), 'days') <= -1)) this.selected.push(date)
         },
         typeCalculator(j) {
-            
+            let hold = 0
+
             for(let i=0; i<this.selected.length; i++) {
-                if (this.base.clone().add(j,'days').isSame(this.selected[i], 'days')) return 3
+
+                if (this.base.clone().add(j,'days').isSame(this.selected[i], 'days')) {
+                    for(let k=0; k<this.selected.length; k++) {
+                        if (this.base.clone().add(j-1,'days').isSame(this.selected[k], 'days')) {
+                            hold = (hold==1) ? 2 : -1
+                        }
+                        if (this.base.clone().add(j+1,'days').isSame(this.selected[k], 'days')) {
+                            hold = (hold==-1) ? 2 : 1
+                        }
+                        if(hold==2) break
+                    }
+                    switch (hold) {
+                        case 0:
+                            return 5
+                        case -1:
+                            return 4
+                        case 1:
+                            return 2
+                        case 2:
+                            return 3
+                        default:
+                            return 4
+                    }
+                }
             }
 
             if(this.base.clone().add(j, 'days').diff(this.today.clone(), 'days') <= -1) return 0
 
-            return this.base.clone().add(j, 'days').isSame(this.monthViewing.clone(), 'month') ? 1 : 4
+            return this.base.clone().add(j, 'days').isSame(this.monthViewing.clone(), 'month') ? 1 : 6
         }
     },
 }
@@ -175,6 +217,10 @@ export default {
   opacity: 0;
   -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.anim-cal {
+    transition: all 0.15s;
 }
 
 .box:hover {

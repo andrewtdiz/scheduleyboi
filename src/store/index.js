@@ -6,16 +6,25 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     selected: [],
-    eventName: '',
+    eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
     endTimeSelected: 12,
     timeZoneSelected: 5,
+    timeCreated: 5,
     failedCreate: false,
+    
+    showWarning: true,
 
   },
   getters: {
     getStartTimeSelected(state) {
       return state.startTimeSelected
+    },
+    getShowWarning(state) {
+      return state.showWarning
+    },  
+    getTimeCreated(state) {
+      return state.timeCreated
     },
     getEndTimeSelected(state) {
       return state.endTimeSelected
@@ -29,13 +38,25 @@ export default new Vuex.Store({
     getSelectedLength(state) {
       return state.selected.length
     },
+    getSelected(state) {
+      return state.selected
+    },
     getFailedCreate(state) {
       return state.failedCreate
     },
   },
   mutations: {
     updateSelected (state, val) {
+
       state.selected = val
+      window.console.log('updated selected', state.selected)
+
+    },
+    setShowWarning(state, val) {
+      state.showWarning = val
+    },
+    setTimeCreated (state, val) {
+      state.timeCreated = val
     },
     setFailedCreate(state, val) {
       state.failedCreate = val

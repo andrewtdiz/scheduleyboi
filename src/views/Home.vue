@@ -2,8 +2,8 @@
   <div>
 
     <div class="flex justify-center pt-20 min-h-screen bg-gray-100 md:pt-32">
-      <div class="flex flex-wrap container justify-around"> 
-        <CreateEvent class="md:mx-12" v-for="step in steps" :key="step" :step="step" />
+      <div class="flex flex-wrap container md:p-5 justify-between"> 
+        <CreateEvent class="" v-for="step in steps" :key="step" :step="step" />
       </div>    
     </div>
     

@@ -1,15 +1,17 @@
 <template>
-  <div class="relative inline-block text-left" :class="type==3 ? 'w-full' : ''" >
+  <div class="relative inline-block text-left" >
         <div class="w-full">
         <span @click="isOpened = !isOpened" class="rounded-md shadow-sm cursor-pointer">
-            <div :class="wasSelected ? 'text-gray-700' : 'text-gray-500'" class="inline-flex justify-center w-full bg-white rounded-md border border-gray-400 px-4 py-2 bg-white leading-5 text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150">
-            <p class="appearance-none " style="cursor: pointer !important; user-select: none !important">{{options[defaultSelected].name}}</p>
+            <div :class="dropStyle" class="inline-flex justify-center w-full rounded-md border border-gray-400 px-4 py-2 leading-5 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 transition ease-in-out duration-150">
+            <p class="appearance-none " style="cursor: pointer !important; user-select: none !important">{{value!=undefined ? options[value].name : options[defaultSelected].name}}</p>
             <svg class="-mr-1 ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
             </svg>
             </div>
         </span>
         </div>
+
+        <Warning :warning="warning" />
 
         <!--
         Dropdown panel, show/hide based on dropdown state.
@@ -36,14 +38,18 @@
 </template>
 
 <script>
+import Warning from './warning.vue'
+
 export default {
-    props: ['defaultText', 'startTimes', 'endTimes', 'timeZones'],
+    props: ['defaultText', 'startTimes', 'endTimes', 'timeZones', 'warning', 'sendUp', 'value'],
+    components: {
+        Warning
+    },
     data() {
         return {
             isOpened: false,
             type: undefined,
             options: undefined,
-            optionSelected: undefined,
             wasSelected: false,
         }
     },
@@ -60,14 +66,25 @@ export default {
             else if (this.type==3) return this.$store.getters.getTimeZoneSelected
             else return 0
         },
+        dropStyle() {
+            let arr = []
+            arr.push(this.warning ? ['text-white', 'bg-red-500'] : 'bg-white')
+            arr.push((this.wasSelected && !this.warning) ? 'text-gray-700' : '')
+            return arr
+        },
     },
     methods: {
         selectOption(ind) {
             this.isOpened = false
-            if(this.type==1) return this.$store.commit('changeDropDownValue', {loc: 'startTimeSelected', val: ind})
-            else if(this.type==2) return  this.$store.commit('changeDropDownValue', {loc: 'endTimeSelected', val: ind})
-            else if (this.type==3) return this.$store.commit('changeDropDownValue', {loc: 'timeZoneSelected', val: ind})
+            if(this.sendUp) {
+                this.$emit('changeTimeZone', ind)
+            } else {
+                if(this.type==1) return this.$store.commit('changeDropDownValue', {loc: 'startTimeSelected', val: ind})
+                else if(this.type==2) return  this.$store.commit('changeDropDownValue', {loc: 'endTimeSelected', val: ind})
+                else if (this.type==3) return this.$store.commit('changeDropDownValue', {loc: 'timeZoneSelected', val: ind})
+            }
         },
+        
     },
 }
 </script>

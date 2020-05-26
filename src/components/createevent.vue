@@ -5,7 +5,7 @@
             
             <div class="w-full flex justify-center mt-6">
                 <div class="w-full flex items-center flex-col justify-center">
-                    <input :class="(eventName.length==0 && failedCreate) ? ['', 'border-red-500'] : 'border-gray-400'" @input="setEventName($event.target.value)" :value="eventName" class="w-full rounded border focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4 sm:mb-0" placeholder="Event Name" type="text">
+                    <input @keydown.enter="tryCreate" :class="(eventName.length==0 && failedCreate) ? ['', 'border-red-500'] : 'border-gray-400'" @input="setEventName($event.target.value)" :value="eventName" class="w-full rounded border focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4 sm:mb-0" placeholder="Event Name" type="text">
                     <p v-if="failedCreate && eventName.length==0" class="text-xs text-red-500">Event must have a name!</p>
                     <p v-else class="text-xs text-red-500"></p>
                 </div>
@@ -13,7 +13,7 @@
 
             </div>
 
-            <CalendarVue class="mt-6" />
+            <CalendarVue @keydown.enter="tryCreate" class="mt-6" />
             <p v-if="(selectedLength==0 && failedCreate)" class="text-xs text-red-500">Event must have at least 1 date selected!</p>
             <p v-else class="text-xs text-red-500"></p>
 
@@ -31,7 +31,7 @@
           <p class="text-black text-lg">Time Zone:</p>
         </div>
         <div class="w-full flex justify-between mt-4 items-baseline">
-            <DropDown :timeZones="timeZones"/>
+            <DropDown :timeZones="timeZones" class="w-full"/>
         </div>
         <div class="w-full flex  mt-32">
             <div class="container justify-center rounded flex items-baseline">
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+let moment = require('moment')
+
 import CalendarVue from './calendarvue.vue'
 import DropDown from './dropdown.vue'
 import TimeRangeSelector from './timerangeselector.vue'
@@ -64,6 +66,7 @@ export default {
       if(this.eventName.length>0 && this.selectedLength) this.$router.push('/about')
       else {
         this.$store.commit('setFailedCreate', true)
+        this.$store.commit('setTimeCreated', moment())
         window.console.log('failed ', this.canCreate, this.failedToCreate)
 
       }
