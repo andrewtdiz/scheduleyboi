@@ -12,6 +12,7 @@
             </div>
         </div>
         <h1 class="text-red-500" v-if="selectedLengthError">Please select less than 10 days</h1>
+        
     </div>
 </template>
 
@@ -83,6 +84,9 @@ export default {
         }
     },
     methods: {
+        removeFromSelected(val) {
+            this.selected.splice(val, 1)
+        },
         renderCalendar(){
             this.calendar = []
             let arr = []
@@ -119,8 +123,24 @@ export default {
             }
             return false
         },
+        addToSelected(date) {
+            if(this.selected.length==0) {
+                this.selected.push(date.clone())
+                return
+            }
+            for(let i=0; i<this.selected.length; i++) {
+                if(this.selected[i].clone().diff(date.clone(), 'days') > 0) {
+                    this.selected.splice(i,0,date.clone())
+                    return
+                }
+            }
+            this.selected.push(date.clone())
+        },
         selectDate (date) {
-            
+            if(date.clone().diff(this.today.clone(), 'days') <= -1) {
+                return 
+            }
+
             if(!(date.clone().diff(this.today.clone(), 'days') <= -1) && !this.selectedContains(date)) {
                 if(this.selected.length > 10 ){
                     this.selectedLengthError = true
@@ -128,7 +148,7 @@ export default {
                 } else {
                     this.selectedLengthError = false
                 }
-                this.selected.push(date)
+                this.addToSelected(date)
             } else {
                  for(let i=0; i<this.selected.length; i++) {
                     if (date.clone().isSame(this.selected[i], 'days')) {
@@ -166,7 +186,7 @@ export default {
                         this.selectedLengthError = true
                         break
                     }
-                    if(change && !this.selectedContains(dragstart.clone().add(i, 'weeks').add(j, 'days'))) this.selected.push(dragstart.clone().add(i, 'weeks').add(j, 'days'))
+                    if(change && !this.selectedContains(dragstart.clone().add(i, 'weeks').add(j, 'days')) && dragstart.clone().add(i,'weeks').add(j, 'days').diff(this.today.clone(), 'days')>-1 ) this.addToSelected(dragstart.clone().add(i, 'weeks').add(j, 'days'))
                     else if(!change) {
                         for(let k=0; k<this.selected.length; k++) {
                             if(this.selected[k].isSame(dragstart.clone().add(i, 'weeks').add(j, 'days'))) {

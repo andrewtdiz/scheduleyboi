@@ -3,10 +3,8 @@
     <header class="absolute top-0 w-full shadow bg-white text-gray-700 body-font z-10">
       <div class="container mx-auto flex flex-wrap p-2 md:p-5 flex-col md:flex-row items-center">
         <a class="flex title-font font-medium items-center text-gray-900 mb-0">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-          </svg>
-          <span class="ml-3 text-xl">Scheduley Boi</span>
+          <img src=".././public/logo2.png" class="h-12 w-12" alt="">
+          <span class="ml-3 text-xl font-bold text-gray-700 tracking-wide"> <span class="text-indigo-500">FoundA</span>Time</span>
         </a>
         <div class="md:ml-auto hidden md:flex items-end h-full justify-center">
           <a class="mr-12 cursor-pointer hover:text-gray-900">Get Started</a>
@@ -33,13 +31,18 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  @import url('https://fonts.googleapis.com/css?family=Varela+Round');
+
+  #app {
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+
+
 
 #nav {
   padding: 30px;

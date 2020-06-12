@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full bg-white shadow-md rounded">
       <div class="w-full flex items-center text-black">
           <div  class="rounded flex w-full justify-center items-center px-3 cursor-pointer text-gray-900 hover:text-black">
             <div v-if="!canGoBack" class="opacity-0 justify-center flex text-gray-800 items-center h-6 w-6 rounded-full">

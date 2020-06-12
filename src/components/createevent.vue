@@ -17,6 +17,7 @@
             <p v-if="(selectedLength==0 && failedCreate)" class="text-xs text-red-500">Event must have at least 1 date selected!</p>
             <p v-else class="text-xs text-red-500"></p>
 
+        
 
       </div>
       <div v-if="step==1" class="w-full h-full flex flex-col rounded">
@@ -67,7 +68,6 @@ export default {
       else {
         this.$store.commit('setFailedCreate', true)
         this.$store.commit('setTimeCreated', moment())
-        window.console.log('failed ', this.canCreate, this.failedToCreate)
 
       }
     },
@@ -84,6 +84,9 @@ export default {
     },
     selectedLength () { 
       return this.$store.getters.getSelectedLength
+    },
+    selected() {
+      return this.$store.getters.getSelected
     },
   },
   data () {

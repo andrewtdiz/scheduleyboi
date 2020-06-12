@@ -55,10 +55,7 @@ export default new Vuex.Store({
   },
   mutations: {
     updateSelected (state, val) {
-
       state.selected = val
-      window.console.log('updated selected', state.selected)
-
     },
     setDraggingStart(state, val) {
       state.draggingStart = val
