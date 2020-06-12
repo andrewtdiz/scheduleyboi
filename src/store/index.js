@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    draggingStart: false,
+    draggingEnd: false,
     selected: [],
     eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
@@ -17,6 +19,12 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getDraggingStart(state) {
+      return state.draggingStart
+    },
+    getDraggingEnd(state) {
+      return state.draggingEnd
+    },
     getStartTimeSelected(state) {
       return state.startTimeSelected
     },
@@ -51,6 +59,12 @@ export default new Vuex.Store({
       state.selected = val
       window.console.log('updated selected', state.selected)
 
+    },
+    setDraggingStart(state, val) {
+      state.draggingStart = val
+    },
+    setDraggingEnd(state, val) {
+      state.draggingEnd = val
     },
     setShowWarning(state, val) {
       state.showWarning = val

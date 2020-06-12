@@ -279,6 +279,7 @@ module.exports = {
       auto: 'auto',
       ...theme('spacing'),
       full: '100%',
+      fulltwo: '102%',
       screen: '100vh',
     }),
     inset: {
@@ -429,6 +430,7 @@ module.exports = {
       '10/12': '83.333333%',
       '11/12': '91.666667%',
       full: '100%',
+      fulltwo: '102%',
       screen: '100vw',
     }),
     zIndex: {

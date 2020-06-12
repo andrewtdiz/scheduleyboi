@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-100">
+  <div id="app" class="min-h-screen bg-gray-100" @mouseup="stopDrag">
     <header class="absolute top-0 w-full shadow bg-white text-gray-700 body-font z-10">
       <div class="container mx-auto flex flex-wrap p-2 md:p-5 flex-col md:flex-row items-center">
         <a class="flex title-font font-medium items-center text-gray-900 mb-0">
@@ -20,6 +20,17 @@
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    stopDrag() {
+      this.$store.commit('setDraggingStart', false)
+      this.$store.commit('setDraggingEnd', false)
+    },
+  },
+}
+</script>
 
 <style>
 #app {

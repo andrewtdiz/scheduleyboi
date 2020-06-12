@@ -1,9 +1,14 @@
 <template>
-  <div  @mouseleave="dragging = -1" @mouseup="dragging = -1" class="mt-2 flex flex-col w-full justify-center w-3/4 select-none">
+  <div  @mouseleave="dragging = -1" @mouseup="dragging = -1" class="mt-2 flex flex-col justify-center select-none">
         <div v-for="(week, ind) in calendar" :key="ind+50" class="flex select-none justify-around">
-            <div @mouseenter="handleDrag(day.date)" @mousedown="startDrag(day.date)" v-for="(day, ind2) in week" :key="ind2+100" class="flex w-16 h-16 my-1 select-none noselect cursor-pointer items-center justify-center justify-center" :class="dateStyle[day.type]">
-                <h1 class="text-xl font-medium cursor-pointer select-none noselect" style="user-select: none !important;" >{{day.date.date()}}</h1>
-
+            <div @mouseenter="handleDrag(day.date)" @mousedown="startDrag(day.date)" v-for="(day, ind2) in week" :key="ind2+100" class="w-16 h-16 relative select-none noselect cursor-pointer items-center justify-center justify-center">
+                <h1 class="absolute text-lg font-normal cursor-pointer pointer-events-none select-none noselect" :class="textStyle[day.type]" style="user-select: none !important; left: 50%; top:50%; transform: translate(-50%, -50%)" >{{day.date.date()}}</h1>
+                <div class="w-12 h-12 absolute z-10" :class="dateStyle[day.type]" style="transform: translate(-50%, -50%); left: 50%; top: 50%"></div>
+                <div class="h-12 absolute z-0" :class="edgeStyle[day.type]" style="transform: translate(0%, -50%); top: 0%; top:50%; width: 50%"></div>
+                <div class="h-14 w-14 absolute flex justify-center opacity-0 hover:opacity-100 items-center bg-white rounded-full border-2 border-transparent" :class="hoverStyle[day.type]" style="z-index:100; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                    <h1 class="text-lg font-normal cursor-pointer pointer-events-none select-none noselect text-gray-800" style="z-index: 1000; user-select: none !important; left: 50%; top:50%; transform: translate(0%, 0%)" >{{day.date.date()}}</h1>
+                    
+                </div>
             </div>
         </div>
         <h1 class="text-red-500" v-if="selectedLengthError">Please select less than 10 days</h1>
@@ -19,13 +24,40 @@ export default {
     props: ['monthViewing', 'today'],
     data() {
         return {
+            hoverStyle: [
+                ['hover:border-indigo-500'], 
+                ['hover:border-indigo-500'], 
+                ['hover:border-indigo-200'], 
+                ['hover:border-indigo-200'], 
+                ['hover:border-indigo-200'], 
+                ['hover:border-indigo-200'], 
+                ['text-gray-400'],
+            ],
+            textStyle: [
+                    'text-gray-300',
+                    ['text-gray-700', 'z-20'],
+                    ['text-indigo-100', 'hover:text-gray-700', 'z-20'],
+                    ['text-gray-700', 'z-20'],
+                    ['text-indigo-100', 'hover:text-gray-700', 'z-20'],
+                    ['text-indigo-100', 'hover:text-gray-700', 'z-20'],
+                    'text-gray-400',
+            ],
             dateStyle: [
                 ['text-gray-300', 'cursor-not-allowed'], 
-                ['text-gray-700', 'hover:bg-indigo-100', 'anim-cal', 'hover:z-10'], 
-                ['text-white', 'anim-cal', 'bg-indigo-500', 'rounded-l', 'hover:z-10'], 
-                ['text-white', 'anim-cal', 'bg-indigo-500', 'hover:z-10'], 
-                ['text-white', 'anim-cal', 'bg-indigo-500', 'rounded-r', 'hover:z-10'], 
-                ['text-white', 'anim-cal', 'rounded-l', 'rounded-r', 'bg-indigo-500', 'hover:z-10'], 
+                ['text-gray-700', 'hover:bg-indigo-100', 'hover:z-10'], 
+                ['text-white', 'bg-indigo-500', 'hover:bg-indigo-600', 'rounded-full', 'hover:z-10'], 
+                ['text-white', 'bg-indigo-200', 'hover:z-10', 'w-fulltwo'], 
+                ['text-white', 'bg-indigo-500', 'rounded-full', 'hover:z-10'], 
+                ['text-white', 'rounded-full', 'bg-indigo-500', 'hover:z-10'], 
+                ['text-gray-400'],
+            ],
+            edgeStyle: [
+                ['text-gray-300', 'cursor-not-allowed'], 
+                ['text-gray-700', 'hover:bg-indigo-100', 'hover:z-10'], 
+                ['text-white', 'bg-indigo-200', 'left-50'], 
+                ['text-white', 'bg-indigo-200', 'left-0', 'w-fulltwo'], 
+                ['text-white', 'bg-indigo-200', 'left-0'], 
+                ['text-white', 'left-0'], 
                 ['text-gray-400'],
             ],
             base: undefined,
@@ -198,7 +230,7 @@ export default {
 
 .box {
   position: relative;
-  width: 60px;
+  width: 64px;
   height: 60px;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
   -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);

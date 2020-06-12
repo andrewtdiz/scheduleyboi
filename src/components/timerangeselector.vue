@@ -1,13 +1,13 @@
 <template>
-  <div class="flex justify-center w-full" @mouseleave="stopDrag" @mouseup="stopDrag" @mousemove="handleDrag">
-    <div class="h-12 pt-12 mt-20 mb-10 relative px-auto" style="width: 300px" >
+  <div class="flex justify-center w-full" @mousemove="handleDrag">
+    <div class="h-12 pt-12 mt-20 mb-10 relative px-auto " style="width: 300px" >
         <div class="absolute left-0 w-full h-1 bg-gray-300" style="top: 50%; transform: translateY(-50%)">
 
         </div>
         <div class="absolute text-white rounded bg-indigo-500 px-2 py-1" :class="lastSelected==0 ? 'z-10' : ''" style="top: 50%; transform: translate(-50%, -200%); white-space: nowrap;" :style="{'left': (startTime/this.times.length)*containerWidth+'px'}">
           <p class="text-sm" style="user-select:none !important">{{times[startTime]}}</p>
         </div>
-        <div @mousedown="startDrag(0)" :class="lastSelected==0 ? 'z-10' : ''" class="cursor-pointer absolute w-6 h-6 rounded-full bg-indigo-500" style="top: 50%; transform: translate(-50%,-50%); " :style="{'left': (startTime/this.times.length)*containerWidth+'px'}">
+        <div @mousedown="startDrag(0)" :class="getDraggingStart ? ['bg-indigo-700', 'z-10'] : ['z-10', 'bg-indigo-500', 'hover:bg-indigo-600']" class="cursor-pointer absolute w-6 h-6 rounded-full" style="top: 50%; transform: translate(-50%,-50%); " :style="{'left': (startTime/this.times.length)*containerWidth+'px'}">
             
         </div>
         <div class="absolute h-1  rounded-full bg-indigo-500 z-0 " style="top: 50%; transform: translateY(-50%)" :style="{'left': (startTime/this.times.length)*containerWidth+'px', 'width': ((endTime-startTime)/this.times.length)*containerWidth+'px'}">
@@ -64,16 +64,30 @@ export default {
         endTime() {
             return this.$store.getters.getEndTimeSelected
         },
+        getDraggingStart() {
+            return this.$store.getters.getDraggingStart
+        },
+        getDraggingEnd() {
+            return this.$store.getters.getDraggingEnd
+        },
     },
     methods: {
+        stopDrag() {
+            this.draggingStart = false
+            this.draggingEnd = false
+            this.$store.commit('setDraggingStart', false)
+            this.$store.commit('setDraggingEnd', false)
+        },
         startDrag(val) {
             if(val==0) {
                 this.draggingStart = true
+                this.$store.commit('setDraggingStart', true)
                 this.lastSelected = val
                 this.timeStarting = this.startTime
             }
             else {
                 this.draggingEnd = true
+                this.$store.commit('setDraggingEnd', true)
                 this.lastSelected = 1
                 this.timeStarting = this.endTime
 
@@ -81,12 +95,8 @@ export default {
             this.xUpdated = 0
             this.xStarting = event.clientX
         },  
-        stopDrag() {
-            this.draggingStart = false
-            this.draggingEnd = false
-        },
         handleDrag() {
-            if(this.draggingStart || this.draggingEnd) {
+            if(this.getDraggingStart || this.getDraggingEnd) {
                 this.xUpdated = event.clientX
                 let diff = Math.trunc((this.xUpdated - this.xStarting)/(this.containerWidth/this.times.length))
                 let send = undefined

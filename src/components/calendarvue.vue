@@ -25,7 +25,7 @@
 
       </div>
       <div class="flex justify-around mt-6">
-          <div v-for="day in days" :key="day" class="flex justify-center" style="width: 50px">
+          <div v-for="day in days" :key="day" class="flex justify-center" style="width: 60px">
             <p class="text-sm select-none" >{{day}}</p>
 
           </div>
