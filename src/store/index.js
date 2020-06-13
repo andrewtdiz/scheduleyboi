@@ -4,15 +4,6 @@ import router from '../router'
 
 Vue.use(Vuex)
 
-makeid = function() {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < 20; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 export default new Vuex.Store({
   state: {
@@ -167,8 +158,8 @@ export default new Vuex.Store({
       state.users = data
     },
     SOCKET_sendChat(state,data){
-      data.forEach(element => {
-        state.chat.push(data)
+      data.reverse().forEach(element => {
+        state.chat.push(element)
       });
     }
   },
