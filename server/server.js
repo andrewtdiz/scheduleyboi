@@ -30,7 +30,7 @@ io.on('connection',(socket) => {
         
         // Initialize room data and info
         eventInfo[temp] = data
-        eventInfo[temp].time = 0
+        eventInfo[temp].time = {}
         eventInfo[temp] = {}
         eventInfo[temp].chat = []
         eventInfo[temp].users = {}
@@ -60,7 +60,7 @@ io.on('connection',(socket) => {
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
-        console.log(JSON.stringify(eventInfo[data.room_id]))
+        console.log(JSON.stringify(eventInfo[data.room_id].time))
         eventInfo[data.room_id].time[socket.user_id] = data.time
         var temp = {}
         temp[socket.user_id] = data.time
