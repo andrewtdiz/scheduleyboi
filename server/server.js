@@ -26,8 +26,14 @@ io.on('connection',(socket) => {
         console.log('You made a creebin!')
         console.log(JSON.stringify(data))
         var temp = makeid()
+        
+        
+        // Initialize room data and info
         eventInfo[temp] = data
         eventInfo[temp].time = 0
+        eventInfo[data.room_id].chat = []
+        eventInfo[data.room_id].users = {}
+
         socket.emit('makeRoom',{room_id:temp})
     })
 
@@ -37,16 +43,42 @@ io.on('connection',(socket) => {
         socket.leave(socket.room);
         socket.join(data.room_id);
         socket.room = data.room_id;
+        socket.user_id = data.user_id
+        if (data.username){
+            eventInfo[data.room_id].users[data.user_id] = data.username
+        }else{
+            eventInfo[data.room_id].users[data.user_id] = "Anonymous"
+        }
+        eventInfo[data.room_id].users[user_id] = ""
         var temp = eventInfo[data.room_id]
         temp.room_id = data.room_id
         socket.emit('joinRoom',temp)
+        socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
 
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
-        eventInfo[data.room_id].time = data.time
-        socket.broadcast.to(socket.room).emit('sendAva',data.time)
+        eventInfo[data.room_id].time[socket.user_id] = data.time
+        var temp = {}
+        temp[socket.user_id] = data.time
+        socket.broadcast.to(socket.room).emit('sendAva',temp)
+    })
+
+    socket.on('updateUser', (data)=>{
+        console.log("Looking for User: " + JSON.stringify(data))
+        eventInfo[data.room_id].users[data.user_id] = data.username
+        socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
+    })
+
+    socket.on('sendChat', (data)=>{
+        console.log('You said creebin!')
+        console.log(JSON.stringify(data))
+        var temp = {}
+        temp.message = data.message
+        temp.user_id = data.user_id
+        eventInfo[data.room_id].chat.push(temp)
+        socket.broadcast.to(socket.room).emit('sendChat',data.message)
     })
 
 })

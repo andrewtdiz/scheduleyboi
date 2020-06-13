@@ -26,12 +26,21 @@ export default {
       this.$store.commit('setDraggingStart', false)
       this.$store.commit('setDraggingEnd', false)
     },
+    makeid() {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < 20; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    }
   },
   watch: {
     $route(to) {
       if (to.name == 'Event'){
         console.log('did i do it?')
-        this.$socket.emit('joinRoom',{room_id: to.params.id})
+        this.$socket.emit('joinRoom',{room_id: to.params.id, user_id: this.makeid()})
       }
       console.log(to.name)
     },

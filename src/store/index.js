@@ -4,12 +4,24 @@ import router from '../router'
 
 Vue.use(Vuex)
 
+makeid = function() {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < 20; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 export default new Vuex.Store({
   state: {
     draggingStart: false,
     draggingEnd: false,
     selected: [],
-    time: 1,
+    chat: [],
+    time: {},
+    users: {},
     eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
     endTimeSelected: 12,
@@ -21,6 +33,12 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getUsers(state){
+      return state.chat
+    },
+    getChat(state){
+      return state.chat
+    },
     getTime(state) {
       return state.time
     },
@@ -111,6 +129,18 @@ export default new Vuex.Store({
       }
       this._vm.$socket.emit('makeRoom',temp)
     },
+    sendChat(state,val){
+      var temp = val
+      temp.room_id = state.room_id
+      temp.user_id = state.user_id
+      this._vm.$socket.emit('sendChat',temp)
+    },
+    updateUser(state,username){
+      var temp = {}
+      temp.room_id = state.room_id
+      temp.username = username
+      this._vm.$socket.emit('updateUser',temp)
+    },
 
     //Socket Handlers
     SOCKET_makeRoom(state,data){
@@ -118,11 +148,28 @@ export default new Vuex.Store({
     },
     SOCKET_joinRoom(state,data){
       Object.keys(data).forEach((u) => {
-        state[u] = data[u]
+        console.log()
+        if (u=='selected'){
+          data[u].forEach(element => {
+            state[u].push(new Date(element))
+          });
+        }else{
+          state[u] = data[u]
+        }
       });
     },
     SOCKET_sendAva(state,data){
-      state.time = data
+      Object.keys(data).forEach(user => {
+        state.time[user] = data[user]
+      });
+    },
+    SOCKET_updateUser(state,data){
+      state.users = data
+    },
+    SOCKET_sendChat(state,data){
+      data.forEach(element => {
+        state.chat.push(data)
+      });
     }
   },
   actions: {
