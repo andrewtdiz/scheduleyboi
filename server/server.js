@@ -38,8 +38,6 @@ io.on('connection',(socket) => {
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
         socket.broadcast.to(socket.room).emit('sendAva',data)
-        
-    emit('recieveAva',data)
     })
 
 })
