@@ -31,9 +31,9 @@ io.on('connection',(socket) => {
         // Initialize room data and info
         eventInfo[temp] = data
         eventInfo[temp].time = 0
-        eventInfo[data.room_id] = {}
-        eventInfo[data.room_id].chat = []
-        eventInfo[data.room_id].users = {}
+        eventInfo[temp] = {}
+        eventInfo[temp].chat = []
+        eventInfo[temp].users = {}
 
         socket.emit('makeRoom',{room_id:temp})
     })
