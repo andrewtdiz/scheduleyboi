@@ -48,7 +48,7 @@ io.on('connection',(socket) => {
         if (data.username){
             eventInfo[data.room_id].users[data.user_id] = data.username
         }else{
-            console.log(eventInfo[data.room_id].users)
+            console.log(eventInfo[data.room_id])
             eventInfo[data.room_id].users[data.user_id] = "Anonymous"
         }
         eventInfo[data.room_id].users[user_id] = ""
