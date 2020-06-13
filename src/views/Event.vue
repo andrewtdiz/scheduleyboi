@@ -85,7 +85,7 @@
         <div class="ml-10 mt-20 w-1/3 h-64 shadow-md flex-col bg-white rounded">
           <p class="text-left font-bold px-4 py-2">Chat</p>
           <div>
-            <p v-for="(msg, ind) in chat" :key="ind+99">{{msg.message}}</p>
+            <p v-for="(msg, ind) in chats" :key="ind+99">{{msg.message}}</p>
           </div>
           <div class="flex flex-between mx-2 mt-auto">
             <input type="text" placeholder="Send Message" v-model="chatText" @keypress.enter="submitMessage">
@@ -148,6 +148,7 @@ export default {
     submitMessage() {
       window.console.log(this.chatText)
       this.$store.commit("sendChat" , this.chatText)
+      this.chatText = ''
     },
     changeTimeZone(val) {
       this.userTime = val
