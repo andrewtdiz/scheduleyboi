@@ -28,13 +28,18 @@ io.on('connection',(socket) => {
     socket.on('joinRoom', (data)=>{
         console.log('You joined creebo!')
         console.log(JSON.stringify(data))
+        socket.leave(socket.room);
+        socket.join(data.room_id);
+        socket.room = data.room_id;
 
     })
 
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
-        socket.emit('recieveAva',data)
+        socket.broadcast.to(socket.room).emit('sendAva',data)
+        
+    emit('recieveAva',data)
     })
 
 })

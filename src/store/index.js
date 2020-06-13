@@ -66,7 +66,7 @@ export default new Vuex.Store({
       }else{
         state.time -= 2**val
       }
-      this._vm.$socket.emit('sendAva')
+      this._vm.$socket.emit('sendAva',state.time)
     },
     updateSelected (state, val) {
       state.selected = val
@@ -107,9 +107,9 @@ export default new Vuex.Store({
       console.log(data)
       router.push('/event/' + data.roomid)
     },
-    SOCKET_recieveAva(state,data){
+    SOCKET_sendAva(state,data){
       console.log(data)
-      router.push('/event/' + data.roomid)
+      state.time = data
     }
   },
   actions: {
