@@ -48,11 +48,11 @@ io.on('connection',(socket) => {
         if (data.username){
             eventInfo[data.room_id].users[data.user_id] = data.username
         }else{
-            console.log(eventInfo[data.room_id])
             eventInfo[data.room_id].users[data.user_id] = "Anonymous"
         }
         var temp = eventInfo[data.room_id]
         temp.room_id = data.room_id
+        temp.user_id = data.user_id
         socket.emit('joinRoom',temp)
         socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
