@@ -85,7 +85,7 @@ io.on('connection',(socket) => {
         temp.message = data.message
         temp.user_id = data.user_id
         eventInfo[data.room_id].chat.push(temp)
-        socket.broadcast.to(socket.room).emit('sendChat',data.message)
+        socket.broadcast.to(socket.room).emit('sendChat',temp)
     })
 
 })

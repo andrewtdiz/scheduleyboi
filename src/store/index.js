@@ -135,7 +135,7 @@ export default new Vuex.Store({
       this._vm.$socket.emit('makeRoom',temp)
     },
     sendChat(state,val){
-      var temp = val
+      var temp = {message: val}
       temp.room_id = state.room_id
       temp.user_id = state.user_id
       this._vm.$socket.emit('sendChat',temp)
