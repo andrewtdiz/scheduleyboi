@@ -34,6 +34,7 @@ io.on('connection',(socket) => {
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
+        socket.emit('recieveAva',data)
     })
 
 })

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -8,6 +9,7 @@ export default new Vuex.Store({
     draggingStart: false,
     draggingEnd: false,
     selected: [],
+    time: 1,
     eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
     endTimeSelected: 12,
@@ -19,6 +21,9 @@ export default new Vuex.Store({
 
   },
   getters: {
+    getTime(state) {
+      return state.time
+    },
     getDraggingStart(state) {
       return state.draggingStart
     },
@@ -54,6 +59,15 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    flipTime(state,val) {
+      console.log(val)
+      if ((((state.time >> val)% 2) == 0)){
+        state.time += 2**val
+      }else{
+        state.time -= 2**val
+      }
+      this._vm.$socket.emit('sendAva')
+    },
     updateSelected (state, val) {
       state.selected = val
     },
@@ -86,6 +100,16 @@ export default new Vuex.Store({
     },
     makeRoom(state){
       this._vm.$socket.emit('makeRoom',state.selected)
+    },
+
+    //Socket Handlers
+    SOCKET_makeRoom(state,data){
+      console.log(data)
+      router.push('/event/' + data.roomid)
+    },
+    SOCKET_recieveAva(state,data){
+      console.log(data)
+      router.push('/event/' + data.roomid)
     }
   },
   actions: {

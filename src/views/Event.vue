@@ -74,6 +74,10 @@
         </div>
       </div>
 
+      <div class="" >
+        <button @click="$store.commit('flipTime',ind)" v-for="ind in 16" :key="ind+898" class="px-4 py-2"  :class="(((time >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']">tim</button>
+      </div>
+
       <WeekSelector />
       
 
@@ -133,6 +137,9 @@ export default {
   computed: {
     eventName () {
       return this.$store.getters.getEventName
+    },
+    time() {      
+      return this.$store.getters.getTime
     },
     timeCreated() {
       return this.$store.getters.getTimeCreated

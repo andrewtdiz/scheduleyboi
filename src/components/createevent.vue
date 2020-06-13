@@ -65,7 +65,6 @@ export default {
     },
     tryCreate () {
       if(this.eventName.length>0 && this.selectedLength){
-        // this.$router.push('/event')
         this.$store.commit('makeRoom')
       } 
       else {

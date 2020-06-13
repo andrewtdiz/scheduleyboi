@@ -29,7 +29,7 @@ export default {
   },
   watch: {
     $route(to) {
-      this.$socket.emit('joinRoom',to.name)
+      this.$socket.emit('joinRoom',{room: to.name,room_id: to.params.id})
     },
   }
 }
