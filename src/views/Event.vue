@@ -74,11 +74,13 @@
         </div>
       </div>
 
-      <div v-for="(userKey, index) in Object.keys(users)" :key="index+99" class="" >
-        <button @click="$store.commit('flipTime',ind)" v-for="ind in 16" :key="ind+898" class="px-4 py-2"  :class="(((time[userKey] >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']">{{time[userKey]}}</button>
+      <div v-for="(num, index) in time" :key="index+99" class="relative " >
+        <div class="flex absolute">
+          <button @click="$store.commit('flipTime',ind)" v-for="(val, ind) in 16" :key="ind+898" class="px-8 py-6 border border-gray-600 rounded mx-1"  :class="(((num >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']" style="opacity: 0.2"></button>
+        </div>
       </div>
 
-      <WeekSelector />
+      <WeekSelector class="mt-20" />
       
 
     </div>
@@ -133,8 +135,20 @@ export default {
     changeTimeZone(val) {
       this.userTime = val
     },
+    makeid() {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < 20; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    }
   },
   computed: {
+    userArray(){
+      return this.$store.getters.getUserArray
+    },
     user_id() {
       return this.$store.getters.getUserId
     },
@@ -168,6 +182,7 @@ export default {
   },
   created() {
     this.$store.commit('setTimeCreated', moment())
+    this.$socket.emit('joinRoom',{room_id: this.$route.params.id, user_id: this.makeid()})
     for (let i=0; i< this.numDates; i++){
       this.selectedSample.push(moment().clone().add(i, 'days'))
     }

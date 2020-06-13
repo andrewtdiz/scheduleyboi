@@ -13,9 +13,9 @@ export default new Vuex.Store({
     selected: [],
     chat: [],
     time: [],
-    userArray = [],
+    userArray: [],
     users: {},
-    user_id: "",
+    user_id: " ",
     user_index: -1,
     eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
@@ -29,6 +29,9 @@ export default new Vuex.Store({
   },
   getters: {
     
+    getUserArray(state){
+      return state.userArray
+    },
     getUserId(state){
       return state.user_id
     },
@@ -77,15 +80,17 @@ export default new Vuex.Store({
   },
   mutations: {
     flipTime(state,val) {
-      if ((((state.time[state.user_id] >> val)% 2) == 0)){
-        Vue.set(state.time, state.user_id, state.time[state.user_id]+2**val)
-      }else{
-        Vue.set(state.time, state.user_id, state.time[state.user_id]-2**val)
+      if ((((state.time[state.user_index] >> val)% 2) == 0)){
+        let temp = state.time[state.user_index] + 2**val
+        state.time.splice(state.user_index, 1, temp)
 
+      }else{
+        let temp = state.time[state.user_index] - 2**val
+        state.time.splice(state.user_index, 1, temp)
       }
       var temp = {
         room_id: state.room_id,
-        time: state.time[state.user_id],
+        time: state.time[state.user_index],
       }
       this._vm.$socket.emit('sendAva',temp)
     },
@@ -144,7 +149,7 @@ export default new Vuex.Store({
 
     //Socket Handlers
     SOCKET_makeRoom(state,data){
-      router.push('/event/' + data.room_id)
+      router.push('/' + data.room_id)
     },
     SOCKET_joinRoom(state,data){
       console.log(data)
@@ -173,15 +178,24 @@ export default new Vuex.Store({
     SOCKET_sendAva(state,data){
       Object.keys(data).forEach(user => {
         if (state.userArray.indexOf(user) < 0){
-          state.userArray.push(user)
-          state.time.push(data[user])
+          state.userArray.length = state.userArray.length+1
+          Vue.set(state.userArray, state.userArray.length-1, user)
+          state.time.length = state.time.length+1
+          Vue.set(state.time, state.time.length-1, data[user])
         }else{
-          state.time[state.userArray.indexOf(user)] = data[user]
+          state.time.splice(state.userArray.indexOf(user),1, data[user])
         }
       });
     },
     SOCKET_updateUser(state,data){
-      state.users = data
+      Object.keys(data).forEach(user => {
+        if (state.userArray.indexOf(user) < 0){
+          state.userArray.length = state.userArray.length+1
+          Vue.set(state.userArray, state.userArray.length-1, user)
+          state.time.length = state.time.length+1
+          Vue.set(state.time, state.time.length-1, 0)
+        }
+      });
     },
     SOCKET_sendChat(state,data){
       data.reverse().forEach(element => {
