@@ -69,7 +69,7 @@ export default new Vuex.Store({
         room_id: state.room_id,
         time: state.time,
       }
-      this._vm.$socket.emit('sendAva',state.time)
+      this._vm.$socket.emit('sendAva',temp)
     },
     updateSelected (state, val) {
       state.selected = val

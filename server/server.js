@@ -27,7 +27,7 @@ io.on('connection',(socket) => {
         console.log(JSON.stringify(data))
         var temp = makeid()
         eventInfo[temp] = data
-        eventInfo[data.room_id].time = 0
+        eventInfo[temp].time = 0
         socket.emit('makeRoom',{room_id:temp})
     })
 
