@@ -27,6 +27,11 @@ export default {
       this.$store.commit('setDraggingEnd', false)
     },
   },
+  watch: {
+    $route(to) {
+      this.$socket.emit('joinRoom',to.name)
+    },
+  }
 }
 </script>
 

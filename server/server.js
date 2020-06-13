@@ -22,6 +22,7 @@ io.on('connection',(socket) => {
     socket.on('makeRoom', (data)=>{
         console.log('You made a creebin!')
         console.log(JSON.stringify(data))
+        socket.emit('makeRoom',{roomid:3})
     })
 
     socket.on('joinRoom', (data)=>{

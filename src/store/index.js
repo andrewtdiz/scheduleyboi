@@ -84,6 +84,9 @@ export default new Vuex.Store({
     changeEndTime(state, val) {
       state.endTimeSelected = val 
     },
+    makeRoom(state){
+      this._vm.$socket.emit('makeRoom',state.selected)
+    }
   },
   actions: {
 

@@ -64,7 +64,10 @@ export default {
       this.$store.commit('setEventName', val)
     },
     tryCreate () {
-      if(this.eventName.length>0 && this.selectedLength) this.$router.push('/event')
+      if(this.eventName.length>0 && this.selectedLength){
+        // this.$router.push('/event')
+        this.$store.commit('makeRoom')
+      } 
       else {
         this.$store.commit('setFailedCreate', true)
         this.$store.commit('setTimeCreated', moment())
