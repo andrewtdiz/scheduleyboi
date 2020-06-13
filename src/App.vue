@@ -29,7 +29,11 @@ export default {
   },
   watch: {
     $route(to) {
-      this.$socket.emit('joinRoom',{room: to.name,room_id: to.params.id})
+      if (to.name == 'Event'){
+        console.log('did i do it?')
+        this.$socket.emit('joinRoom',{room_id: to.params.id})
+      }
+      console.log(to.name)
     },
   }
 }

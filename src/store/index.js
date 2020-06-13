@@ -60,11 +60,14 @@ export default new Vuex.Store({
   },
   mutations: {
     flipTime(state,val) {
-      console.log(val)
       if ((((state.time >> val)% 2) == 0)){
         state.time += 2**val
       }else{
         state.time -= 2**val
+      }
+      var temp = {
+        room_id: state.room_id,
+        time: state.time,
       }
       this._vm.$socket.emit('sendAva',state.time)
     },
@@ -99,16 +102,26 @@ export default new Vuex.Store({
       state.endTimeSelected = val 
     },
     makeRoom(state){
-      this._vm.$socket.emit('makeRoom',state.selected)
+      var temp = {
+        selected: state.selected,
+        eventName: state.eventName,
+        startTimeSelected: state.startTimeSelected,
+        endTimeSelected: state.endTimeSelected,
+        timeZoneSelected: state.timeZoneSelected
+      }
+      this._vm.$socket.emit('makeRoom',temp)
     },
 
     //Socket Handlers
     SOCKET_makeRoom(state,data){
-      console.log(data)
-      router.push('/event/' + data.roomid)
+      router.push('/event/' + data.room_id)
+    },
+    SOCKET_joinRoom(state,data){
+      Object.keys(data).forEach((u) => {
+        state[u] = data[u]
+      });
     },
     SOCKET_sendAva(state,data){
-      console.log(data)
       state.time = data
     }
   },

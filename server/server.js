@@ -18,11 +18,17 @@ app.get('/', (req, res) => {
 	// console.log(req.headers)
 });
 
+var events = {}
+var eventInfo = {}
+
 io.on('connection',(socket) => {
     socket.on('makeRoom', (data)=>{
         console.log('You made a creebin!')
         console.log(JSON.stringify(data))
-        socket.emit('makeRoom',{roomid:3})
+        var temp = makeid()
+        eventInfo[temp] = data
+        eventInfo[data.room_id].time = 0
+        socket.emit('makeRoom',{room_id:temp})
     })
 
     socket.on('joinRoom', (data)=>{
@@ -31,13 +37,26 @@ io.on('connection',(socket) => {
         socket.leave(socket.room);
         socket.join(data.room_id);
         socket.room = data.room_id;
-
+        var temp = eventInfo[data.room_id]
+        temp.room_id = data.room_id
+        socket.emit('joinRoom',temp)
     })
 
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
-        socket.broadcast.to(socket.room).emit('sendAva',data)
+        eventInfo[data.room_id].time = data.time
+        socket.broadcast.to(socket.room).emit('sendAva',data.time)
     })
 
 })
+
+makeid = function() {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 20; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
