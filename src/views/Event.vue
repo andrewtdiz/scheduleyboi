@@ -74,8 +74,8 @@
         </div>
       </div>
 
-      <div class="" >
-        <button @click="$store.commit('flipTime',ind)" v-for="ind in 16" :key="ind+898" class="px-4 py-2"  :class="(((time >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']">tim</button>
+      <div v-for="(userKey, index) in Object.keys(users)" :key="index+99" class="" >
+        <button @click="$store.commit('flipTime',ind)" v-for="ind in 16" :key="ind+898" class="px-4 py-2"  :class="(((time[userKey] >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']">{{time[userKey]}}</button>
       </div>
 
       <WeekSelector />
@@ -135,6 +135,12 @@ export default {
     },
   },
   computed: {
+    user_id() {
+      return this.$store.getters.getUserId
+    },
+    users() {
+      return this.$store.getters.getUsers
+    },
     eventName () {
       return this.$store.getters.getEventName
     },

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
+let moment = require('moment')
 
 Vue.use(Vuex)
 
@@ -11,8 +12,11 @@ export default new Vuex.Store({
     draggingEnd: false,
     selected: [],
     chat: [],
-    time: {},
+    time: [],
+    userArray = [],
     users: {},
+    user_id: "",
+    user_index: -1,
     eventName: 'Offical Team Meeting',
     startTimeSelected: 3,
     endTimeSelected: 12,
@@ -24,8 +28,12 @@ export default new Vuex.Store({
 
   },
   getters: {
+    
+    getUserId(state){
+      return state.user_id
+    },
     getUsers(state){
-      return state.chat
+      return state.users
     },
     getChat(state){
       return state.chat
@@ -69,14 +77,15 @@ export default new Vuex.Store({
   },
   mutations: {
     flipTime(state,val) {
-      if ((((state.time >> val)% 2) == 0)){
-        state.time += 2**val
+      if ((((state.time[state.user_id] >> val)% 2) == 0)){
+        Vue.set(state.time, state.user_id, state.time[state.user_id]+2**val)
       }else{
-        state.time -= 2**val
+        Vue.set(state.time, state.user_id, state.time[state.user_id]-2**val)
+
       }
       var temp = {
         room_id: state.room_id,
-        time: state.time,
+        time: state.time[state.user_id],
       }
       this._vm.$socket.emit('sendAva',temp)
     },
@@ -138,20 +147,37 @@ export default new Vuex.Store({
       router.push('/event/' + data.room_id)
     },
     SOCKET_joinRoom(state,data){
+      console.log(data)
+      state.selected = []
       Object.keys(data).forEach((u) => {
-        console.log()
         if (u=='selected'){
+          console.log("I like puppies:" + data[u])
           data[u].forEach(element => {
-            state[u].push(new Date(element))
+            window.console.log(element)
+            state[u].push(moment(element))
           });
+        } else if (u=='time'){
+          state.userArray = []
+          state.time = []
+          Object.keys(data[u]).forEach((pup) =>{
+            state.userArray.push(pup)
+            state.time.push(data[u][pup])
+          })
         }else{
           state[u] = data[u]
         }
       });
+      state.user_index = state.userArray.indexOf(state.user_id)
+      state.time[state.user_id] = 0
     },
     SOCKET_sendAva(state,data){
       Object.keys(data).forEach(user => {
-        state.time[user] = data[user]
+        if (state.userArray.indexOf(user) < 0){
+          state.userArray.push(user)
+          state.time.push(data[user])
+        }else{
+          state.time[state.userArray.indexOf(user)] = data[user]
+        }
       });
     },
     SOCKET_updateUser(state,data){

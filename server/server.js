@@ -51,6 +51,9 @@ io.on('connection',(socket) => {
         }else{
             eventInfo[data.room_id].users[data.user_id] = "Anonymous"
         }
+        if (!eventInfo[data.room_id].time[data.user_id]){
+            eventInfo[data.room_id].time[data.user_id] = 0
+        }
         var temp = eventInfo[data.room_id]
         temp.room_id = data.room_id
         temp.user_id = data.user_id
