@@ -51,7 +51,6 @@ io.on('connection',(socket) => {
             console.log(eventInfo[data.room_id])
             eventInfo[data.room_id].users[data.user_id] = "Anonymous"
         }
-        eventInfo[data.room_id].users[user_id] = ""
         var temp = eventInfo[data.room_id]
         temp.room_id = data.room_id
         socket.emit('joinRoom',temp)
