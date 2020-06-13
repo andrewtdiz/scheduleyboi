@@ -29,9 +29,9 @@ io.on('connection',(socket) => {
         
         
         // Initialize room data and info
+        eventInfo[temp] = {}
         eventInfo[temp] = data
         eventInfo[temp].time = {}
-        eventInfo[temp] = {}
         eventInfo[temp].chat = []
         eventInfo[temp].users = {}
 
