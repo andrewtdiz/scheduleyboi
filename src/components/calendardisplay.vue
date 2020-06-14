@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <h1 class="text-red-500" v-if="selectedLengthError">Please select less than 10 days</h1>
+        <h1 class="text-red-500" v-if="selectedLengthError">Cannot select more than {{maxDays}} days</h1>
         
     </div>
 </template>
@@ -64,6 +64,7 @@ export default {
             base: undefined,
             calendar: [],
             selected: [],
+            maxDays: 7,
             startDragDate: undefined,
             dragging: -1,
             previousStart: undefined,
@@ -142,7 +143,7 @@ export default {
             }
 
             if(!(date.clone().diff(this.today.clone(), 'days') <= -1) && !this.selectedContains(date)) {
-                if(this.selected.length > 10 ){
+                if(this.selected.length >= this.maxDays ){
                     this.selectedLengthError = true
                     return 
                 } else {
@@ -150,6 +151,7 @@ export default {
                 }
                 this.addToSelected(date)
             } else {
+                 this.selectedLengthError = false
                  for(let i=0; i<this.selected.length; i++) {
                     if (date.clone().isSame(this.selected[i], 'days')) {
                         this.selected.splice(i,1)
@@ -182,7 +184,7 @@ export default {
                 let j = daysSpanned
                 let doubleBreak = false
                 while(!doubleBreak) {
-                    if(this.selected.length > 10) {
+                    if(this.selected.length >= this.maxDays) {
                         this.selectedLengthError = true
                         break
                     }

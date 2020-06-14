@@ -16,8 +16,8 @@
             <CalendarVue @keydown.enter="tryCreate" class="mt-6" />
             <p v-if="(selectedLength==0 && failedCreate)" class="text-xs text-red-500">Event must have at least 1 date selected!</p>
             <p v-else class="text-xs text-red-500"></p>
-
-        
+              
+            
 
       </div>
       <div v-if="step==1" class="w-full h-full flex flex-col rounded">
@@ -26,20 +26,32 @@
         <div class="w-full flex mt-6">
           <p class="text-black text-lg">Between:</p>
         </div>
-        <TimeRangeSelector />
 
         <div class="w-full flex mt-6">
           <p class="text-black text-lg">Time Zone:</p>
         </div>
-        <div class="w-full flex justify-between mt-4 items-baseline">
-            <DropDown :timeZones="timeZones" class="w-full"/>
-        </div>
+        
         <div class="w-full flex  mt-32">
-            <div class="container justify-center rounded flex items-baseline">
+            
+        </div>
+      </div>
+      <div v-if="step==2" class="w-full h-full flex flex-col rounded">
+        
+        <div class="w-full flex justify-between mb-4 items-baseline">
+                <DropDown :timeZones="timeZones" class="w-full"/>
+            </div>
+        <div class="flex flex-col bg-white shadow items-stretch w-full">
+          <div v-for="(day,ind) in selected" :key="ind+56"  class="w-full flex justify-center">
+            <timeselecteddisplay :ind="ind" :day="day" />
+          </div>
+              
+            </div>
+            <TimeRangeSelector />
+
+            <div class="container justify-center mt-12 rounded flex items-baseline">
                 <p class="text-xl text-gray-800 mr-6">Ready?</p>
                   <button @click="tryCreate" class="font-medium text-white text-xl bg-indigo-500 hover:bg-indigo-600 rounded px-4 py-2">Create Event</button>
             </div>
-        </div>
       </div>
   </div>
 </template>
@@ -50,12 +62,14 @@ let moment = require('moment')
 import CalendarVue from './calendarvue.vue'
 import DropDown from './dropdown.vue'
 import TimeRangeSelector from './timerangeselector.vue'
+import timeselecteddisplay from './timeselecteddisplay.vue'
 
 export default {
   name: 'CreateEvent',
   props:['step'],
   components: {
       CalendarVue,
+      timeselecteddisplay,
       DropDown,
       TimeRangeSelector,
   },
@@ -75,6 +89,7 @@ export default {
     },
   },
   computed: {
+    
     eventName () {
       return this.$store.getters.getEventName
     },
@@ -93,6 +108,7 @@ export default {
   },
   data () {
     return {
+       
       startTimes: [
         {
           value: 5,

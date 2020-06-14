@@ -56,10 +56,10 @@
                 <div class="h-6 w-6 rounded bg-indigo-500 mt-1"></div>
                 <div class="flex flex-col items-start">
                   <div class="flex items-baseline">
-                    <h1 class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id].username}}</h1>
-                    <h1 class="font-medium text-gray-500 text-xs uppercase  rounded" >{{msg.timestamp.format('LT')}}</h1>
+                    <p class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id].username}}</p>
+                    <p class="font-medium text-gray-500 text-xs uppercase  rounded" >{{msg.timestamp.format('LT')}}</p>
                   </div>
-                  <h1 class="block  text-md rounded px-2 py-1" >{{msg.message}}</h1>
+                  <p class="block  text-md rounded px-2" >{{msg.message}}</p>
                 </div>
 
               </div>
@@ -95,6 +95,7 @@ export default {
       today: moment(),
       numDates: 7,
       userTime: 2,
+     
       timeZones: [
         {
           name:'HST	Hawaii Standard Time',
@@ -146,6 +147,7 @@ export default {
     userArray(){
       return this.$store.getters.getUserArray
     },
+    
     chats(){
       return this.$store.getters.getChat
     },

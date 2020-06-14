@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center w-full" @mousemove="handleDrag">
-    <div class="h-12 pt-12 mt-20 mb-10 relative px-auto " style="width: 300px" >
+    <div class="h-12 pt-12 mt-20 mb-4 relative px-auto " style="width: 300px" >
         <div class="absolute left-0 w-full h-1 bg-gray-300" style="top: 50%; transform: translateY(-50%)">
 
         </div>

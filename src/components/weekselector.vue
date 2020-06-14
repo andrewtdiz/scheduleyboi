@@ -15,9 +15,9 @@
         </div>
         <div class=" flex bg-white flex-col w-24 items-stretch border border-gray-500">
             <div class="flex-1 flex w-full">
-                <div v-for="(day,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 flex flex-col items-center justify-between border-gray-500">
-                    <p class="text-xs text-gray-600">{{day.clone().format('ddd')}}</p>
-                    <p class="text-sm">{{day.clone().date()}}</p>
+                <div v-for="(data,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 flex flex-col items-center justify-between border-gray-500">
+                    <p class="text-xs text-gray-600">{{data.day.clone().format('ddd')}}</p>
+                    <p class="text-sm">{{data.day.clone().date()}}</p>
                 </div>
             </div>
             <div v-for="(hour, ind) in hourRange" :key="ind+50" class="flex-1 flex w-full">

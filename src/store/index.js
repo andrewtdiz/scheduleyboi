@@ -17,7 +17,7 @@ export default new Vuex.Store({
     users: {},
     user_id: " ",
     user_index: -1,
-    eventName: 'Offical Team Meeting',
+    eventName: '',
     startTimeSelected: 3,
     endTimeSelected: 12,
     timeZoneSelected: 5,
@@ -94,6 +94,9 @@ export default new Vuex.Store({
       }
       this._vm.$socket.emit('sendAva',temp)
     },
+    removeFromSelected(state, ind) {
+      state.selected.splice(ind,1)
+    },
     updateSelected (state, val) {
       state.selected = val
     },
@@ -125,8 +128,12 @@ export default new Vuex.Store({
       state.endTimeSelected = val 
     },
     makeRoom(state){
+      var tempS = []
+      state.selected.forEach((d)=>{
+        tempS.push({day: d,startTimeSelected: state.startTimeSelected, endTimeSelected: state.endTimeSelected})
+      })
       var temp = {
-        selected: state.selected,
+        selected: tempS,
         eventName: state.eventName,
         startTimeSelected: state.startTimeSelected,
         endTimeSelected: state.endTimeSelected,
@@ -177,9 +184,10 @@ export default new Vuex.Store({
             state.chat.push(element)
           });
         }else if (u=='users') {
-          Object.keys(data).forEach(user_id => {
-            Vue.set(state.users, user_id, data[user_id])
-          }
+          Object.keys(data[u]).forEach(user_id => {
+            console.log("set users: "  + user_id , " data: " + JSON.stringify(data[u][user_id] ))
+            Vue.set(state.users, user_id, data[u][user_id])
+          })
         }else{
           state[u] = data[u]
         }
