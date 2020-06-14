@@ -37,6 +37,11 @@ export default {
       }
       console.log(to.name)
     },
+  },
+  mounted(){
+    if (localStorage.user_id){
+      this.$store.commit('setUserId',localStorage.user_id)
+    }
   }
 }
 </script>

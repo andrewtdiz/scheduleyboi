@@ -1,5 +1,5 @@
 <template>
-    <div class="w-1/3 flex items-stretch relative" style="min-height: 50vh"> 
+    <div class="flex items-stretch relative -ml-16" style="min-height: 50vh"> 
         <div class="w-16" style="min-height: 50vh">
 
         </div>
@@ -13,8 +13,8 @@
 
             </div>
         </div>
-        <div class=" flex bg-white flex-col w-24 items-stretch border border-gray-500">
-            <div class="flex-1 flex w-full">
+        <div class=" flex bg-white flex-col w-64 items-stretch border border-gray-500">
+            <div  class="flex-1 flex w-full">
                 <div v-for="(data,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 flex flex-col items-center justify-between border-gray-500">
                     <p class="text-xs text-gray-600">{{data.day.clone().format('ddd')}}</p>
                     <p class="text-sm">{{data.day.clone().date()}}</p>
@@ -22,8 +22,8 @@
             </div>
             <div v-for="(hour, ind) in hourRange" :key="ind+50" class="flex-1 flex w-full">
                 <div v-for="(day,ind2) in selected" :key="ind2" :class="ind==(hourRange.length-1) ? (ind2==(selected.length-1) ? '' : 'border-r') :  ind2==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="relative flex-1 flex flex-col items-center justify-between py-2 border-gray-500">
-                    <div class='absolute cursor-pointer hover:shadow-inner w-full border-b border-dashed' style="height: 50%; top: 0%"></div>
-                    <div class='absolute cursor-pointer hover:shadow-inner w-full' style="height: 50%; top: 50%"></div>
+                    <div @mousedown="startDrag(ind+ind2)" @mousemove="handleDrag(ind+ind2)" class="absolute cursor-pointer hover:shadow-inner w-full border-b border-dashed" :class="timesData[val+val2] ? 'bg-blue-500' : ''" style="height: 50%; top: 0%"></div>
+                    <div @mousedown="startDrag(ind+ind2+1)" @mousemove="handleDrag(ind+ind2+1)" class='absolute cursor-pointer hover:shadow-inner w-full' style="height: 50%; top: 50%"></div>
                 </div>
             </div>
         </div>
@@ -32,22 +32,66 @@
 
 <script>
 export default {
+    props: ['label', 'type'],
+    methods: {
+        startDrag(val) {
+            this.dragging = true
+            if(this.timesData[val] == false) {
+                this.selecting = 1
+            } else {
+                this.selecting = -1
+            }
+        },
+        handleDrag(val) {
+            if(this.dragging = true && this.selecting==1) {
+                Vue.set(this.dragging, val, true)
+            }
+        },
+    },
     data() {
         return {
-            startTime: 8,
-            endTime: 16,
-            hourRange: [],
+            startTime: 0,
+            endTime: 0,
+            timesData: [],
+            dragging: false,
+            selecting: 0,
         }
     },
     computed: {
         selected() {
             return this.$store.getters.getSelected
         },
+        hourRange() {
+            let temp = []
+            for(let i=this.startTime; i<(this.endTime); i++) {
+                temp.push(i)
+            }
+            return temp
+        },
+    },
+    watch: {
+        selected: {
+            deep: true,
+            handler: function() {
+            window.console.log('selected changed', this.selected)
+            this.startTime = this.selected[0].startTimeSelected +5
+            this.endTime = this.selected[0].endTimeSelected +5
+            for(let j=0; j<this.selected.length; j++) {
+                for(let i=this.startTime; i<(this.endTime); i++) {
+                    this.timesData.push(0)
+                    this.timesData.push(0)
+                }
+            }
+            window.console.log('data empty', this.timesData)
+        },
+    },
     },
     created() {
-        for(let i=this.startTime; i<=(this.endTime); i++) {
-            this.hourRange.push(i)
-        }
+        
+        this.startTime = 8
+        this.endTime = 12
+        
+        console.log('crated shjow', this.selected)
     },
 }
 </script>

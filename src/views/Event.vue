@@ -6,12 +6,12 @@
           <div class="flex w-full justify-between items-center">
             <div class="flex-1 flex items-end">
               <p class="text-2xl md:text-5xl font-bold text-gray-800">{{eventName}}</p>
-              <div class="flex items-center ml-6 mb-2">
+              <!-- <div class="flex items-center ml-6 mb-2">
                 <img class=" h-10 w-10 shadow border border-white object-cover rounded-full" src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60" alt="">
                 <img class="absolute ml-8 h-10 w-10 shadow border border-white object-cover rounded-full" src="https://images.unsplash.com/photo-1535419218759-c71f0a6015b3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60" alt="">
                 <img class="absolute ml-16 h-10 w-10 shadow border border-white object-cover rounded-full" src="https://images.unsplash.com/flagged/photo-1574282893982-ff1675ba4900?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60" alt="">
                 <p class="text-sm ml-20 hover:underline cursor-pointer text-gray-700 hover:text-gray-900">+4 more</p>
-              </div>
+              </div> -->
               <div class="flex flex-col ml-auto mb-2">
                 <DropDown :timeZones="timeZones" :sendUp="true" :value="userTime" @changeTimeZone="changeTimeZone($event)" class="w-72 ml-auto" :warning="!timesEqual&&showWarning"/>
                 
@@ -40,15 +40,25 @@
       </div>
 
 
-      <div v-for="(num, index) in time" :key="index+99" class="w-3/4 relative" >
+      <!-- <div v-for="(num, index) in time" :key="index+99" class="w-3/4 relative" >
         <div class="flex absolute">
           <button @click="$store.commit('flipTime',ind)" v-for="(val, ind) in 16" :key="ind+898" class="px-8 py-6 border border-gray-600 rounded m-1"  :class="(((num >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']" style="opacity: 0.2"></button>
         </div>
-      </div>
-      <div class="flex w-3/4 justify-between items-start ">
-        <WeekSelector class="mt-20" />
-        <WeekSelector class="mt-20" />
-        <div class="mt-20 w-1/3 shadow-md flex-col bg-white rounded" >
+      </div> -->
+      <div class="flex w-3/4 mt-6 justify-between items-start ">
+        <div class="h-full w-1/3 flex flex-col items-start">  
+          <p class="text-2xl mb-2">My Availability</p>
+
+          <WeekSelector :type="'my'" :label="'My availability'"/>
+          
+        </div>
+        <div class="h-full w-1/3 flex flex-col items-start">  
+          <p class="text-2xl mb-2">Group Availability</p>
+
+          <WeekSelector :type="'group'" :label="'Group availability'"/>
+
+        </div>
+        <div class="w-1/3 shadow-md flex-col bg-white rounded" >
           <p class="text-left font-bold px-4 py-2">Chat</p>
           <div ref="chatScroll" class="overflow-y-scroll" id="style-2" style='height: 45vh'>
             <div class=" flex flex-col mt-4 mx-4" v-for="(msg, ind) in chats" :key="ind+99">
@@ -79,6 +89,7 @@
 
 <script>
 let moment = require('moment')
+var moment = require('moment-timezone');
 import DropDown from '../components/dropdown.vue'
 import WeekSelector from '../components/weekselector.vue'
 
@@ -95,6 +106,7 @@ export default {
       today: moment(),
       numDates: 7,
       userTime: 2,
+      currentTimezone: 0,
      
       timeZones: [
         {
@@ -184,15 +196,25 @@ export default {
     chats() {
       setTimeout(() => this.$refs['chatScroll'].scrollTop = this.$refs['chatScroll'].scrollHeight, 100)
     },
+    user_id(){
+      localStorage.user_id = this.user_id
+    }
   },
   created() {
     this.$store.commit('setTimeCreated', moment())
-    this.$socket.emit('joinRoom',{room_id: this.$route.params.id, user_id: this.makeid()})
-    for (let i=0; i< this.numDates; i++){
-      this.selectedSample.push(moment().clone().add(i, 'days'))
+    var temp = {room_id: this.$route.params.id, user_id: this.makeid()}
+    if (this.user_id){
+      temp.user_id = this.user_id
     }
-    window.console.log('sending selected')
-    this.$store.commit('updateSelected', this.selectedSample)
+    this.$socket.emit('joinRoom',temp)
+    console.log("tanjie: ")
+    console.log(moment.tz.names())
+    console.log(moment.tz.guess())
+    // for (let i=0; i< this.numDates; i++){
+    //   this.selectedSample.push(moment().clone().add(i, 'days'))
+    // }
+    // window.console.log('sending selected')
+    // this.$store.commit('updateSelected', this.selectedSample)
     this.timesEqual = this.userTime==this.timeZone
   },
 }

@@ -103,6 +103,9 @@ export default new Vuex.Store({
     setDraggingStart(state, val) {
       state.draggingStart = val
     },
+    setUserId(state,val){
+      state.user_id = val
+    },
     setDraggingEnd(state, val) {
       state.draggingEnd = val
     },
@@ -162,15 +165,18 @@ export default new Vuex.Store({
       router.push('/' + data.room_id)
     },
     SOCKET_joinRoom(state,data){
-      console.log(data)
       state.selected = []
       Object.keys(data).forEach((u) => {
         if (u=='selected'){
-          console.log("I like puppies:" + data[u])
+          var tempArr = []
           data[u].forEach(element => {
+            var temp = element
+            temp = element
+            temp.day = moment(element.day)
             window.console.log(element)
-            state[u].push(moment(element))
+            tempArr.push(temp)
           });
+          state[u] = tempArr
         } else if (u=='time'){
           state.userArray = []
           state.time = []
@@ -194,6 +200,7 @@ export default new Vuex.Store({
       });
       state.user_index = state.userArray.indexOf(state.user_id)
       state.time[state.user_id] = 0
+      console.log(state)
     },
     SOCKET_sendAva(state,data){
       Object.keys(data).forEach(user => {
