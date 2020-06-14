@@ -16,6 +16,7 @@
     "date-fns": "^2.14.0",
     "datejs": "^1.0.0-rc3",
     "moment": "^2.26.0",
+    "moment-timezone": "^0.5.31",
     "postcss-cli": "^7.1.1",
     "tailwindcss": "^1.4.6",
     "vue": "^2.6.11",
