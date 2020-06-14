@@ -139,7 +139,7 @@ export default new Vuex.Store({
       temp.user_id = state.user_id
       state.chat.push(temp)
       temp.room_id = state.room_id
-      temp.time = moment()
+      temp.timestamp = moment()
       this._vm.$socket.emit('sendChat',temp)
     },
     updateUser(state,username){
@@ -170,6 +170,11 @@ export default new Vuex.Store({
             state.userArray.push(pup)
             state.time.push(data[u][pup])
           })
+        }else if (u=='chat') {
+          data[u].reverse().forEach(element => {
+            element.timestamp = moment(element.timestamp)
+            state.chat.push(element)
+          });
         }else{
           state[u] = data[u]
         }
@@ -201,8 +206,10 @@ export default new Vuex.Store({
     },
     SOCKET_sendChat(state,data){
       data.reverse().forEach(element => {
+        element.timestamp = moment(element.timestamp)
         state.chat.push(element)
       });
+
     }
   },
   actions: {

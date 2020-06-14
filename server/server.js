@@ -84,7 +84,7 @@ io.on('connection',(socket) => {
         var temp = {}
         temp.message = data.message
         temp.user_id = data.user_id
-        temp.time = data.time
+        temp.timestamp = moment(data.timestamp)
         eventInfo[data.room_id].chat.push(temp)
         socket.broadcast.to(socket.room).emit('sendChat',[temp])
     })
