@@ -56,7 +56,7 @@
                 <div class="h-6 w-6 rounded bg-indigo-500 mt-1"></div>
                 <div class="flex flex-col items-start">
                   <div class="flex items-baseline">
-                    <h1 class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id]}}</h1>
+                    <h1 class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id].username}}</h1>
                     <h1 class="font-medium text-gray-500 text-xs uppercase  rounded" >{{msg.timestamp.format('LT')}}</h1>
                   </div>
                   <h1 class="block  text-md rounded px-2 py-1" >{{msg.message}}</h1>

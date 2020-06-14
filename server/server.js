@@ -47,10 +47,16 @@ io.on('connection',(socket) => {
             socket.join(data.room_id);
             socket.room = data.room_id;
             socket.user_id = data.user_id
+            eventInfo[data.room_id].users[data.user_id] = {}
             if (data.username){
-                eventInfo[data.room_id].users[data.user_id] = data.username
+                eventInfo[data.room_id].users[data.user_id].username = data.username
             }else{
-                eventInfo[data.room_id].users[data.user_id] = "Anonymous"
+                eventInfo[data.room_id].users[data.user_id].username = "Anonymous"
+            }
+            if (data.color){
+                eventInfo[data.room_id].users[data.user_id].color = data.color
+            }else{
+                eventInfo[data.room_id].users[data.user_id].color = "bg-blue-500"
             }
             if (!eventInfo[data.room_id].time[data.user_id]){
                 eventInfo[data.room_id].time[data.user_id] = 0
@@ -78,7 +84,8 @@ io.on('connection',(socket) => {
 
     socket.on('updateUser', (data)=>{
         console.log("Looking for User: " + JSON.stringify(data))
-        eventInfo[data.room_id].users[data.user_id] = data.username
+        eventInfo[data.room_id].users[data.user_id].username = data.username
+        eventInfo[data.room_id].users[data.user_id].color = data.color
         socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
 

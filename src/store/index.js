@@ -142,10 +142,11 @@ export default new Vuex.Store({
       temp.timestamp = moment()
       this._vm.$socket.emit('sendChat',temp)
     },
-    updateUser(state,username){
+    updateUser(state,val){
       var temp = {}
       temp.room_id = state.room_id
-      temp.username = username
+      temp.username = val.username
+      temp.color = val.color
       this._vm.$socket.emit('updateUser',temp)
     },
 
@@ -175,6 +176,10 @@ export default new Vuex.Store({
             element.timestamp = moment(element.timestamp)
             state.chat.push(element)
           });
+        }else if (u=='users') {
+          Object.keys(data).forEach(user_id => {
+            Vue.set(state.users, user_id, data[user_id])
+          }
         }else{
           state[u] = data[u]
         }
@@ -195,13 +200,17 @@ export default new Vuex.Store({
       });
     },
     SOCKET_updateUser(state,data){
-      Object.keys(data).forEach(user => {
-        if (state.userArray.indexOf(user) < 0){
-          state.userArray.length = state.userArray.length+1
-          Vue.set(state.userArray, state.userArray.length-1, user)
-          state.time.length = state.time.length+1
-          Vue.set(state.time, state.time.length-1, 0)
-        }
+      
+      Object.keys(data).forEach(user_id => {
+
+        Vue.set(state.users, user_id, data[user_id])
+        // if (state.users)
+        // if (state.userArray.indexOf(user_id) < 0){
+        //   state.userArray.length = state.userArray.length+1
+        //   Vue.set(state.userArray, state.userArray.length-1, {username: data.username})
+        //   state.time.length = state.time.length+1
+        //   Vue.set(state.time, state.time.length-1, 0)
+        // }
       });
     },
     SOCKET_sendChat(state,data){
