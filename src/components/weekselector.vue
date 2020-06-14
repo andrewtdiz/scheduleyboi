@@ -1,5 +1,5 @@
 <template>
-    <div class="w-1/2 flex items-stretch relative" style="min-height: 50vh"> 
+    <div class="w-1/3 flex items-stretch relative" style="min-height: 50vh"> 
         <div class="w-16" style="min-height: 50vh">
 
         </div>
@@ -8,20 +8,22 @@
 
             </div>
             <div v-for="(hour, ind) in hourRange" :key="ind+50" class="flex w-full relative" :style="{'z-index': 20-ind, 'height': 50/hourRange.length+'vh'}">
-                <p  class="-mt-4 absolute pr-2 top-0 right-0 " style="transform: translateY(50%); font-size: 0.75rem">{{hour>12 ? (hour-12+ ' PM') :  (hour + ' AM')}}</p>
+                <p  class="-mt-4 absolute pr-2 top-0 right-0 " style="transform: translateY(50%); font-size: 0.70rem">{{hour>12 ? (hour-12+ ' PM') :  (hour + ' AM')}}</p>
                 <p v-if="ind==hourRange.length-1"  class="absolute pr-2 bottom-0 right-0 " style="transform: translateY(50%); font-size: 0.75rem">{{hour>12 ? (hour+1-12+ ' PM') :  (hour+1 + ' AM')}}</p>
 
             </div>
         </div>
-        <div class="flex-1 flex bg-white flex-col items-stretch border border-gray-300">
+        <div class=" flex bg-white flex-col w-24 items-stretch border border-gray-500">
             <div class="flex-1 flex w-full">
-                <div v-for="(day,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 px-4 flex flex-col items-center justify-between border-gray-200">
+                <div v-for="(day,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 flex flex-col items-center justify-between border-gray-500">
                     <p class="text-xs text-gray-600">{{day.clone().format('ddd')}}</p>
                     <p class="text-sm">{{day.clone().date()}}</p>
                 </div>
             </div>
             <div v-for="(hour, ind) in hourRange" :key="ind+50" class="flex-1 flex w-full">
-                <div v-for="(day,ind2) in selected" :key="ind2" :class="ind==(hourRange.length-1) ? (ind2==(selected.length-1) ? '' : 'border-r') :  ind2==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 px-4 flex flex-col hover:shadow-inner items-center justify-between py-2 border-gray-200">
+                <div v-for="(day,ind2) in selected" :key="ind2" :class="ind==(hourRange.length-1) ? (ind2==(selected.length-1) ? '' : 'border-r') :  ind2==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="relative flex-1 flex flex-col items-center justify-between py-2 border-gray-500">
+                    <div class='absolute cursor-pointer hover:shadow-inner w-full border-b border-dashed' style="height: 50%; top: 0%"></div>
+                    <div class='absolute cursor-pointer hover:shadow-inner w-full' style="height: 50%; top: 50%"></div>
                 </div>
             </div>
         </div>

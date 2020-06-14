@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="flex justify-center pt-20 min-h-screen bg-gray-100 md:pt-32">
+    <div class="flex justify-center pt-24 min-h-screen bg-gray-100 md:pt-32">
       <div class="flex container md:p-5 justify-between"> 
         <CreateEvent :step="0" />
         <div class="flex flex-col justify-between flex-wrap w-full mt-24 pt-8" style="height: 385px">

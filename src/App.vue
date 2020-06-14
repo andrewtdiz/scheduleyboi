@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-100" @mouseup="stopDrag">
+  <div id="app" class="min-h-screen" style="background: #f5f5f5" @mouseup="stopDrag">
     <header class="absolute top-0 w-full shadow bg-white text-gray-700 body-font z-10">
       <div class="container mx-auto flex flex-wrap p-2 md:p-5 flex-col md:flex-row items-center">
         <a class="flex title-font font-medium items-center text-gray-900 mb-0">
@@ -47,7 +47,6 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
 
 

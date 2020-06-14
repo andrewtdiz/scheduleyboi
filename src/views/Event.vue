@@ -1,8 +1,8 @@
 <template>
-  <div class="pt-12 w-full flex flex-col items-center">
-    <div class="container flex flex-col">
-      <div class="flex justify-between items-start w-full">
-         <div class="flex flex-col items-start w-full">
+  <div class="pt-24 w-full flex flex-col items-center" >
+    <div class=" flex flex-col items-center w-full">
+      <div class="flex w-3/4 justify-between items-start">
+         <div class="flex  flex-col items-start w-full">
           <div class="flex w-full justify-between items-center">
             <div class="flex-1 flex items-end">
               <p class="text-2xl md:text-5xl font-bold text-gray-800">{{eventName}}</p>
@@ -39,57 +39,35 @@
         
       </div>
 
-      <div class="flex h-full items-center justify-center my-4">
-        
-        <div class="flex justify-center items-center cursor-pointer rounded-full text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 p-4">
-          <svg version="1.1" class="h-3 fill-current   w-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 492 492" xml:space="preserve">
-            <g>
-              <g>
-                <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12
-                  C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084
-                  c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864
-                  l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"/>
-              </g>
-            </g>
-          </svg>
-        </div>
 
-        
-        
-
-        <p class="text-2xl mx-3 font-bold text-gray-800">May 24th</p>
-
-        <div class="flex justify-center items-center cursor-pointer rounded-full text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 p-4">
-          <svg version="1.1" class="h-3 fill-current   w-3" style="transform: rotate(180deg)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 492 492" xml:space="preserve">
-            <g>
-              <g>
-                <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12
-                  C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084
-                  c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864
-                  l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"/>
-              </g>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-      <div v-for="(num, index) in time" :key="index+99" class=" relative" >
+      <div v-for="(num, index) in time" :key="index+99" class="w-3/4 relative" >
         <div class="flex absolute">
           <button @click="$store.commit('flipTime',ind)" v-for="(val, ind) in 16" :key="ind+898" class="px-8 py-6 border border-gray-600 rounded m-1"  :class="(((num >> ind)% 2) == 1)? ['bg-indigo-500', 'text-white'] : ['text-indigo-500']" style="opacity: 0.2"></button>
         </div>
       </div>
-      <div class="flex">
+      <div class="flex w-3/4 justify-between items-start ">
         <WeekSelector class="mt-20" />
-        <div class="ml-10 mt-20 w-1/3 h-64 shadow-md flex-col bg-white rounded">
+        <WeekSelector class="mt-20" />
+        <div class="mt-20 w-1/3 shadow-md flex-col bg-white rounded" >
           <p class="text-left font-bold px-4 py-2">Chat</p>
-          <div>
-            <p v-for="(msg, ind) in chats" :key="ind+99">{{msg.message}}</p>
+          <div ref="chatScroll" class="overflow-y-scroll" id="style-2" style='height: 45vh'>
+            <div class=" flex flex-col mt-4 mx-4" v-for="(msg, ind) in chats" :key="ind+99">
+              <div class="flex items-start">
+                <div class="h-6 w-6 rounded bg-indigo-500 mt-1"></div>
+                <div class="flex flex-col items-start">
+                  <div class="flex items-baseline">
+                    <h1 class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id]}}</h1>
+                    <h1 class="font-medium text-gray-500 text-xs uppercase  rounded" >{{today.format('LT')}}</h1>
+                  </div>
+                  <h1 class="block  text-md rounded px-2 py-1" >{{msg.message}}</h1>
+                </div>
+
+              </div>
+            </div>
           </div>
-          <div class="flex flex-between mx-2 mt-auto">
-            <input type="text" placeholder="Send Message" v-model="chatText" @keypress.enter="submitMessage">
-            <button class="bg-indigo-500 text-white px-2 ml-auto rounded py-1">Send</button>
+          <div class="flex flex-between my-4 mx-6 ">
+            <input  type="text" placeholder="Message" class="px-2 mr-2 py-2 outline-none border border-gray-300 focus:border-gray-600 rounded appearance-none flex-1" v-model="chatText" @keypress.enter="submitMessage">
+            <button class="bg-indigo-500 text-white ml-2 hover:bg-indigo-600 px-2 rounded py-1" @click="submitMessage">Send</button>
           </div>
         </div>
       </div>
@@ -114,6 +92,7 @@ export default {
       selectedSample: [],
       chatText: '',
       timesEqual: true,
+      today: moment(),
       numDates: 7,
       userTime: 2,
       timeZones: [
@@ -200,6 +179,9 @@ export default {
       this.timesEqual = this.userTime==this.timeZone
       this.$store.commit('setShowWarning', true)
     },
+    chats() {
+      setTimeout(() => this.$refs['chatScroll'].scrollTop = this.$refs['chatScroll'].scrollHeight, 100)
+    },
   },
   created() {
     this.$store.commit('setTimeCreated', moment())
@@ -216,4 +198,21 @@ export default {
 
 <style>
 
+#style-2::-webkit-scrollbar-track
+{
+	border-radius: 7px;
+}
+
+#style-2::-webkit-scrollbar
+{
+	width: 8px;
+	background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar-thumb
+{
+	border-radius: 7px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #cecece;
+}
 </style>

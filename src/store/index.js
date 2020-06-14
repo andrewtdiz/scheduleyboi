@@ -136,8 +136,10 @@ export default new Vuex.Store({
     },
     sendChat(state,val){
       var temp = {message: val}
-      temp.room_id = state.room_id
       temp.user_id = state.user_id
+      state.chat.push(temp)
+      temp.room_id = state.room_id
+      temp.time = moment()
       this._vm.$socket.emit('sendChat',temp)
     },
     updateUser(state,username){
