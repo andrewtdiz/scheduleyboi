@@ -31,7 +31,7 @@
                     <div v-if="label=='My availability'" :class="(((actualTimes[ind2] >> (ind*2+1))% 2) == 1) ? 'bg-indigo-500' : ''" class='absolute pointer-events-none cursor-pointer hover:shadow-inner w-full' style="height: 50%; user-select: none !important; top: 50%"></div>
                     
                     <div v-if="label=='Group availability'" class="absolute cursor-pointer w-full" style="height: 100%; user-select: none !important; top: 0%">
-                        <div v-for="(user_id, ind) in Object.keys(users)" :key="ind+999" class="absolute w-full" style="height: 100%; user-select: none !important; top: 0%">
+                        <div v-for="(user_id, ind3) in Object.keys(users)" :key="ind3+999" class="absolute w-full" style="height: 100%; user-select: none !important; top: 0%">
                             <div :class="(((time[user_id][ind2] >> (ind*2))% 2) == 1) ? ['bg-red-500', 'opacity-25'] : ''" class="absolute w-full border-b border-dashed" style="height: 50%; user-select: none !important; top: 0%"></div>
                             <div :class="(((time[user_id][ind2] >> (ind*2+1))% 2) == 1) ? ['bg-red-500', 'opacity-25'] : ''" class='absolute w-full' style="height: 50%; user-select: none !important; top: 50%"></div>
                         </div>
@@ -80,6 +80,7 @@ export default {
                         this.timesData.splice(ind, 1, 0)
                     });
                 }
+                this.$store.commit("sendActualTime",this.actualTimes)
             } else if(this.dragging & this.selecting==0) {
                 this.dragging = false
                 window.console.log(this.timesData)
@@ -107,8 +108,9 @@ export default {
                 this.removeTimesData.forEach((elem,ind) => {
                     this.removeTimesData.splice(ind, 1, 0)
                 });
+                this.$store.commit("sendActualTime",this.actualTimes)
+                
             }
-            this.$store.commit("sendActualTime",this.actualTimes)
 
         },
         startDrag(col, row){

@@ -100,8 +100,16 @@ export default new Vuex.Store({
         time: val,
         user_id: state.user_id
       }
-      state.time[state.user_id] = val
+      console.log(state.time[state.user_id])
       this._vm.$socket.emit('sendAva',temp)
+    },
+    setActualTime(state,data){
+      console.log("User: " + data.user + "value: " + data.val)
+      Vue.set(state.time,data.user,data.val)
+      data.val.forEach((element,index) => {
+        Vue.set(state.time[data.user],index,element)
+      });
+      console.log("I'm a puppy")
     },
     removeFromSelected(state, ind) {
       state.selected.splice(ind,1)
@@ -211,19 +219,25 @@ export default new Vuex.Store({
       state.time[state.user_id] = 0
       console.log(state)
     },
-    SOCKET_sendAva(state,data){
-      Object.keys(data).forEach(user => {
-        if (state.userArray.indexOf(user) < 0){
-          state.userArray.length = state.userArray.length+1
-          Vue.set(state.userArray, state.userArray.length-1, user)
-          state.time.length = state.time.length+1
-          Vue.set(state.time, state.time.length-1, data[user])
-        }else{
-          state.time.splice(state.userArray.indexOf(user),1, data[user])
-        }
-      });
-      console.log(state.time)
-    },
+    // SOCKET_sendAva(state,data){
+    //   Object.keys(data).forEach(user => {
+    //     // if (state.userArray.indexOf(user) < 0){
+    //     //   state.userArray.length = state.userArray.length+1
+    //     //   Vue.set(state.userArray, state.userArray.length-1, user)
+    //     //   state.time.length = state.time.length+1
+    //     //   Vue.set(state.time, state.time.length-1, data[user])
+    //     // }else{
+    //     //   state.time[user].splice(state.userArray.indexOf(user),1, data[user])
+    //       Vue.set(state.time,user,data[user])
+    //       data[user].forEach((value,ind)=>{
+    //         // state.time[user].splice(ind,1,val)
+    //         Vue.set(state.time[user],ind,value)
+            
+    //       })
+    //     // }
+    //   });
+    //   console.log(state.time)
+    // },
     SOCKET_updateUser(state,data){
       
       Object.keys(data).forEach(user_id => {
@@ -247,6 +261,22 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    SOCKET_sendAva(context,data){
+      Object.keys(data).forEach(user => {
+        console.log(data[user])
+        context.commit('setActualTime',{user, val: data[user]})
+      });
+    },
+    // sendActualTime(context,val){
+    //   var temp = {
+    //     room_id: context.room_id,
+    //     time: val,
+    //     user_id: context.user_id
+    //   }
+    //   console.log(context.time[context.user_id])
+    //   context.commit('setActualTime',{user: context.user_id, val})
+    //   this._vm.$socket.emit('sendAva',temp)
+    // },
 
   },
   modules: {

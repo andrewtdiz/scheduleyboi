@@ -65,6 +65,7 @@ io.on('connection',(socket) => {
             temp.room_id = data.room_id
             temp.user_id = data.user_id
             socket.emit('joinRoom',temp)
+            socket.broadcast.to(socket.room).emit('sendAva',eventInfo[data.room_id].time)
             socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
         }catch{
             console.log("BIIIIIIG BREAAAAAAKKK HEREEE")
