@@ -233,6 +233,11 @@ export default new Vuex.Store({
     SOCKET_passwordCheck(state,data){
       if (data == '1'){
         state.passwordCheck = true
+        var temp = {}
+        temp.room_id = state.room_id
+        temp.username = state.username
+        temp.color = state.color
+        this._vm.$socket.emit('updateUser',temp)        
       }
     },
     SOCKET_joinRoom(state,data){

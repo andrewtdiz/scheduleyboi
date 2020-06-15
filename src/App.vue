@@ -24,7 +24,7 @@
 
         </div>
         <div class="flex justify-end">
-          <button class="bg-indigo-500 hover:bg-indigo-600 text-white mt-6 ml-auto px-4 py-2 rounded" @click="pushUser()">Save</button>
+          <button class="bg-indigo-500 hover:bg-indigo-600 text-white mt-6 ml-auto px-4 py-2 rounded" @click="checkPassword">Save</button>
 
         </div>
       </div>
@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       username2: '',
-      password2: '',
+      password: '',
     }
   },
   methods: {
@@ -73,8 +73,8 @@ export default {
       }
       return result;
     },
-    checkPassword(password){
-      this.$store.commit('checkPassword',password)
+    checkPassword(){
+      this.$store.commit('checkPassword', this.password)
     },
     pushUser(){
       this.$store.commit('pushUser')

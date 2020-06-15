@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 
 var events = {}
 var eventInfo = {}
+var users = {}
 
 io.on('connection',(socket) => {
     socket.on('makeRoom', (data)=>{
@@ -97,8 +98,14 @@ io.on('connection',(socket) => {
 
     socket.on('updateUser', (data)=>{
         console.log("Looking for User: " + JSON.stringify(data))
-        eventInfo[data.room_id].users[data.user_id].username = data.username
-        eventInfo[data.room_id].users[data.user_id].color = data.color
+        users[data.user_id] = {}
+        users[data.user_id].username = data.username
+        users[data.user_id].color = data.color
+        users[data.user_id].password = data.password
+        if (eventInfo[data.room_id]){
+            eventInfo[data.room_id].users[data.user_id].username = data.username
+            eventInfo[data.room_id].users[data.user_id].color = data.color
+        }
         socket.user_id = data.user_id
         socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
