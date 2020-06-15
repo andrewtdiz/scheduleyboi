@@ -12,7 +12,7 @@ export default new Vuex.Store({
     draggingEnd: false,
     selected: [],
     chat: [],
-    time: [],
+    time: {},
     userArray: [],
     users: {},
     user_id: " ",
@@ -100,6 +100,7 @@ export default new Vuex.Store({
         time: val,
         user_id: state.user_id
       }
+      state.time[state.user_id] = val
       this._vm.$socket.emit('sendAva',temp)
     },
     removeFromSelected(state, ind) {
@@ -187,10 +188,10 @@ export default new Vuex.Store({
           state[u] = tempArr
         } else if (u=='time'){
           state.userArray = []
-          state.time = []
+          state.time = {}
           Object.keys(data[u]).forEach((pup) =>{
             state.userArray.push(pup)
-            state.time.push(data[u][pup])
+            state.time[pup] = data[u][pup]
           })
         }else if (u=='chat') {
           data[u].reverse().forEach(element => {
@@ -221,6 +222,7 @@ export default new Vuex.Store({
           state.time.splice(state.userArray.indexOf(user),1, data[user])
         }
       });
+      console.log(state.time)
     },
     SOCKET_updateUser(state,data){
       

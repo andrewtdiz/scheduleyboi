@@ -203,9 +203,9 @@ export default {
   created() {
     this.$store.commit('setTimeCreated', moment())
     var temp = {room_id: this.$route.params.id, user_id: this.makeid()}
-    if (this.user_id){
-      temp.user_id = this.user_id
-    }
+    // if (this.user_id){
+    //   temp.user_id = this.user_id
+    // }
     this.$socket.emit('joinRoom',temp)
     console.log("tanjie: ")
     console.log(moment.tz.names())
