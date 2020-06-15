@@ -32,6 +32,7 @@ io.on('connection',(socket) => {
         eventInfo[temp] = {}
         eventInfo[temp] = data
         eventInfo[temp].time = {}
+        eventInfo[temp].timeArraySize = data.selected.length
         eventInfo[temp].chat = []
         eventInfo[temp].users = {}
 
@@ -59,13 +60,17 @@ io.on('connection',(socket) => {
                 eventInfo[data.room_id].users[data.user_id].color = "bg-blue-500"
             }
             if (!eventInfo[data.room_id].time[data.user_id]){
-                eventInfo[data.room_id].time[data.user_id] = [0,0,0]
+                var tempArr = []
+                for (let i = 0; i < eventInfo[data.room_id].timeArraySize; i++) {
+                    tempArr.push(0)
+                }
+                eventInfo[data.room_id].time[data.user_id] = tempArr
             }
             var temp = eventInfo[data.room_id]
             temp.room_id = data.room_id
             temp.user_id = data.user_id
             socket.emit('joinRoom',temp)
-            socket.broadcast.to(socket.room).emit('sendAva',eventInfo[data.room_id].time)
+            // socket.broadcast.to(socket.room).emit('sendAva',eventInfo[data.room_id].time)
             socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
         }catch{
             console.log("BIIIIIIG BREAAAAAAKKK HEREEE")

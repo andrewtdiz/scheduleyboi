@@ -199,11 +199,8 @@ export default new Vuex.Store({
           });
           state[u] = tempArr
         } else if (u=='time'){
-          state.userArray = []
-          state.time = {}
-          Object.keys(data[u]).forEach((pup) =>{
-            state.userArray.push(pup)
-            state.time[pup] = data[u][pup]
+          Object.keys(data[u]).forEach((user_id) =>{
+            Vue.set(state.time,user_id,data[u][user_id])
           })
         }else if (u=='chat') {
           data[u].reverse().forEach(element => {
@@ -242,17 +239,8 @@ export default new Vuex.Store({
     //   console.log(state.time)
     // },
     SOCKET_updateUser(state,data){
-      
       Object.keys(data).forEach(user_id => {
-
         Vue.set(state.users, user_id, data[user_id])
-        // if (state.users)
-        // if (state.userArray.indexOf(user_id) < 0){
-        //   state.userArray.length = state.userArray.length+1
-        //   Vue.set(state.userArray, state.userArray.length-1, {username: data.username})
-        //   state.time.length = state.time.length+1
-        //   Vue.set(state.time, state.time.length-1, 0)
-        // }
       });
     },
     SOCKET_sendChat(state,data){
@@ -266,7 +254,8 @@ export default new Vuex.Store({
   actions: {
     SOCKET_sendAva(context,data){
       Object.keys(data).forEach(user => {
-        console.log(data[user])
+        var temp = {user, val: data[user]}
+        console.log(temp)
         context.commit('setActualTime',{user, val: data[user]})
       });
     },
