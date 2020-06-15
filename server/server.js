@@ -102,12 +102,12 @@ io.on('connection',(socket) => {
         users[data.user_id].username = data.username
         users[data.user_id].color = data.color
         users[data.user_id].password = data.password
+        socket.user_id = data.user_id
         if (eventInfo[data.room_id]){
             eventInfo[data.room_id].users[data.user_id].username = data.username
             eventInfo[data.room_id].users[data.user_id].color = data.color
+            socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
         }
-        socket.user_id = data.user_id
-        socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
 
     socket.on('sendChat', (data)=>{
