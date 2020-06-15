@@ -74,11 +74,12 @@ io.on('connection',(socket) => {
     socket.on('sendAva', (data)=>{
         console.log('You sent creebin!')
         console.log(JSON.stringify(data))
-        console.log(JSON.stringify(eventInfo[data.room_id]))
+        // console.log(JSON.stringify(eventInfo[data.room_id]))
         console.log("PUPPYYYYYYYY: " + data.user_id)
         eventInfo[data.room_id].time[socket.user_id] = data.time
         var temp = {}
         temp[socket.user_id] = data.time
+        console.log(temp)
         socket.broadcast.to(socket.room).emit('sendAva',temp)
     })
 
