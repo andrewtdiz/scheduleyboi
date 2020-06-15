@@ -98,6 +98,7 @@ export default new Vuex.Store({
       var temp = {
         room_id: state.room_id,
         time: val,
+        user_id: state.user_id
       }
       this._vm.$socket.emit('sendAva',temp)
     },
