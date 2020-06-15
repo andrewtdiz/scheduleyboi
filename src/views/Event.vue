@@ -88,7 +88,7 @@
 </template>
 
 <script>
-let moment = require('moment')
+// let moment = require('moment')
 var moment = require('moment-timezone');
 import DropDown from '../components/dropdown.vue'
 import WeekSelector from '../components/weekselector.vue'

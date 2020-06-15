@@ -13,7 +13,7 @@
 
             </div>
         </div>
-        <div class=" flex bg-white flex-col w-64 items-stretch border border-gray-500">
+        <div @mouseleave="stopDrag" @mouseup="stopDrag" class=" flex bg-white flex-col w-64 items-stretch border border-gray-500">
             <div  class="flex-1 flex w-full">
                 <div v-for="(data,ind) in selected" :key="ind" :class="ind==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="flex-1 flex flex-col items-center justify-between border-gray-500">
                     <p class="text-xs text-gray-600">{{data.day.clone().format('ddd')}}</p>
@@ -22,8 +22,17 @@
             </div>
             <div v-for="(hour, ind) in hourRange" :key="ind+50" class="flex-1 flex w-full">
                 <div v-for="(day,ind2) in selected" :key="ind2" :class="ind==(hourRange.length-1) ? (ind2==(selected.length-1) ? '' : 'border-r') :  ind2==(selected.length-1) ? 'border-b' : ['border-r', 'border-b']" class="relative flex-1 flex flex-col items-center justify-between py-2 border-gray-500">
-                    <div @mousedown="startDrag(ind+ind2)" @mousemove="handleDrag(ind+ind2)" class="absolute cursor-pointer hover:shadow-inner w-full border-b border-dashed" :class="timesData[val+val2] ? 'bg-blue-500' : ''" style="height: 50%; top: 0%"></div>
-                    <div @mousedown="startDrag(ind+ind2+1)" @mousemove="handleDrag(ind+ind2+1)" class='absolute cursor-pointer hover:shadow-inner w-full' style="height: 50%; top: 50%"></div>
+                    
+                    <div v-if="label=='My availability'" :class="(((-1*removeTimesData[ind2] >> (ind*2))% 2) == 1) ? 'bg-red-500' : ''" class="absolute z-10 pointer-events-none cursor-pointer hover:shadow-inner w-full border-b border-dashed" style="height: 50%; user-select: none !important; top: 0%"></div>
+                    <div v-if="label=='My availability'" :class="(((-1*removeTimesData[ind2] >> (ind*2+1))% 2) == 1) ? 'bg-red-500' : ''" class='absolute z-10 pointer-events-none cursor-pointer hover:shadow-inner w-full' style="height: 50%; user-select: none !important; top: 50%"></div>
+                    <div v-if="label=='My availability'" @mouseenter="handleDrag(ind2,ind*2)" @mousedown="startDrag(ind2,ind*2)" :class="(((timesData[ind2] >> (ind*2))% 2) == 1) ? 'bg-blue-200' : ''" class="absolute cursor-pointer hover:shadow-inner w-full border-b border-dashed" style="height: 50%; user-select: none !important; top: 0%"></div>
+                    <div v-if="label=='My availability'" @mouseenter="handleDrag(ind2,ind*2+1)" @mousedown="startDrag(ind2,ind*2+1)" :class="(((timesData[ind2] >> (ind*2+1))% 2) == 1) ? 'bg-blue-200' : ''" class='absolute cursor-pointer hover:shadow-inner w-full' style="height: 50%; user-select: none !important; top: 50%"></div>
+                    <div v-if="label=='My availability'" :class="(((actualTimes[ind2] >> (ind*2))% 2) == 1) ? 'bg-indigo-500' : ''" class="absolute pointer-events-none cursor-pointer hover:shadow-inner w-full border-b border-dashed" style="height: 50%; user-select: none !important; top: 0%"></div>
+                    <div v-if="label=='My availability'" :class="(((actualTimes[ind2] >> (ind*2+1))% 2) == 1) ? 'bg-indigo-500' : ''" class='absolute pointer-events-none cursor-pointer hover:shadow-inner w-full' style="height: 50%; user-select: none !important; top: 50%"></div>
+                    
+                    <div v-if="label=='Group availability'" :class="(((actualTimes[ind2] >> (ind*2))% 2) == 1) ? 'bg-indigo-500' : ''" class="absolute pointer-events-none cursor-pointer hover:shadow-inner w-full border-b border-dashed" style="height: 50%; user-select: none !important; top: 0%"></div>
+                    
+                
                 </div>
             </div>
         </div>
@@ -34,27 +43,149 @@
 export default {
     props: ['label', 'type'],
     methods: {
-        startDrag(val) {
+        stopDrag(){
+            if(this.dragging & this.selecting==1) {
+                this.dragging = false
+                window.console.log(this.timesData)
+                let h = 0
+                let i = this.lastCol
+                while(h <100) {
+                    for(let j = this.lastRow; 0<Math.abs(j-this.startRow); j+=Math.sign(this.startRow - this.lastRow)){
+                        if (( (this.actualTimes[i] >> (j) ) % 2) == 1){
+                            this.actualTimes.splice(i, 1, this.actualTimes[i]-2**j)
+                        }
+                    }
+                    if (( (this.actualTimes[i] >> (this.startRow) ) % 2) == 1){
+                            this.actualTimes.splice(i, 1, this.actualTimes[i]-2**this.startRow)
+                    }
+
+                    if(i==this.startCol) break
+                    else {
+                        i += Math.sign(this.startCol - this.lastCol)
+                    }
+                    h++
+                }
+                if (this.selecting){
+                    this.timesData.forEach((elem,ind) => {
+                        this.actualTimes.splice(ind, 1, this.actualTimes[ind]+elem)
+                        this.timesData.splice(ind, 1, 0)
+                    });
+                }else{
+                    this.timesData.forEach((elem,ind) => {
+                        this.timesData.splice(ind, 1, 0)
+                    });
+                }
+            } else if(this.dragging & this.selecting==0) {
+                this.dragging = false
+                window.console.log(this.timesData)
+                let h = 0
+                let i = this.lastCol
+                while(h <100) {
+                    for(let j = this.lastRow; 0<Math.abs(j-this.startRow); j+=Math.sign(this.startRow - this.lastRow)){
+                        if (( (this.actualTimes[i] >> (j) ) % 2) == 1){
+                            this.actualTimes.splice(i, 1, this.actualTimes[i]-2**j)
+                        }
+                    }
+                    if (( (this.actualTimes[i] >> (this.startRow) ) % 2) == 1){
+                            this.actualTimes.splice(i, 1, this.actualTimes[i]-2**this.startRow)
+                    }
+
+                    if(i==this.startCol) break
+                    else {
+                        i += Math.sign(this.startCol - this.lastCol)
+                    }
+                    h++
+                }
+                this.timesData.forEach((elem,ind) => {
+                    this.timesData.splice(ind, 1, 0)
+                });
+                this.removeTimesData.forEach((elem,ind) => {
+                    this.removeTimesData.splice(ind, 1, 0)
+                });
+            }
+            this.$store.commit("sendActualTime",this.actualTimes)
+
+        },
+        startDrag(col, row){
+            this.changeTime(col,row)
+            if(((((this.actualTimes[col] >> (row))% 2) == 1))) this.selecting = 0
+            else this.selecting = 1
             this.dragging = true
-            if(this.timesData[val] == false) {
-                this.selecting = 1
-            } else {
-                this.selecting = -1
+            this.startRow = row
+            this.startCol = col
+            this.lastRow = row
+            this.lastCol = col
+        },
+        clearTimesData(){
+            this.timesData = this.timesData.map(() => {
+                return 0
+            })
+
+        },
+        clearRemoveTimesData(){
+            this.removeTimesData = this.removeTimesData.map(() => {
+                return 0
+            })
+
+        },
+        handleDrag(col,row) {
+            if(this.dragging & this.selecting == 1) {
+                this.lastRow = row
+                this.lastCol = col
+                this.clearTimesData()
+                let i = col
+                let h = 0
+                while(h <1000) {
+                    for(let j = row; 0<Math.abs(j-this.startRow); j+=Math.sign(this.startRow - row)){
+                        this.timesData.splice(i, 1, this.timesData[i]+2**j)
+                    }
+                    this.timesData.splice(i, 1, this.timesData[i]+2**this.startRow)
+
+                    if(i==this.startCol) break
+                    else {
+                        i += Math.sign(this.startCol - col)
+                    }
+                    h++
+                }
+            } else if (this.dragging  & this.selecting == 0) {
+                this.lastRow = row
+                this.lastCol = col
+                this.clearRemoveTimesData()
+                let i = col
+                let h = 0
+                while(h <1000) {
+                    for(let j = row; 0<Math.abs(j-this.startRow); j+=Math.sign(this.startRow - row)){
+                        this.removeTimesData.splice(i, 1, this.removeTimesData[i]-2**j)
+                    }
+                    this.removeTimesData.splice(i, 1, this.removeTimesData[i]-2**this.startRow)
+
+                    if(i==this.startCol) break
+                    else {
+                        i += Math.sign(this.startCol - col)
+                    }
+                    h++
+                }
             }
         },
-        handleDrag(val) {
-            if(this.dragging = true && this.selecting==1) {
-                Vue.set(this.dragging, val, true)
-            }
-        },
+        changeTime(col,row){
+            console.log(col,row)
+            // console.log(this.timesData)
+            this.timesData.splice(col, 1, ((((this.timesData[col] >> (row))% 2) == 0)) ? this.timesData[col]+2**row : this.timesData[col]-2**row)
+        }
+       
     },
     data() {
         return {
             startTime: 0,
+            startRow: 0,
+            startCol: 0,
             endTime: 0,
             timesData: [],
+            removeTimesData: [],
+            actualTimes: [],
             dragging: false,
             selecting: 0,
+            canChangeTimes: true,
         }
     },
     computed: {
@@ -73,25 +204,24 @@ export default {
         selected: {
             deep: true,
             handler: function() {
-            window.console.log('selected changed', this.selected)
-            this.startTime = this.selected[0].startTimeSelected +5
-            this.endTime = this.selected[0].endTimeSelected +5
-            for(let j=0; j<this.selected.length; j++) {
-                for(let i=this.startTime; i<(this.endTime); i++) {
+            if(this.canChangeTimes) {
+                this.startTime = this.selected[0].startTimeSelected +5
+                this.endTime = this.selected[0].endTimeSelected +5
+                for(let j=0; j<this.selected.length; j++) {
                     this.timesData.push(0)
-                    this.timesData.push(0)
+                    this.actualTimes.push(0)
+                    this.removeTimesData.push(0)
                 }
             }
-            window.console.log('data empty', this.timesData)
+            
         },
     },
     },
     created() {
-        
+        setTimeout(() => this.canChangeTimes = false, 5000)
         this.startTime = 8
-        this.endTime = 12
+        this.endTime = 17
         
-        console.log('crated shjow', this.selected)
     },
 }
 </script>

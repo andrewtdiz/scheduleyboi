@@ -59,7 +59,7 @@ io.on('connection',(socket) => {
                 eventInfo[data.room_id].users[data.user_id].color = "bg-blue-500"
             }
             if (!eventInfo[data.room_id].time[data.user_id]){
-                eventInfo[data.room_id].time[data.user_id] = 0
+                eventInfo[data.room_id].time[data.user_id] = []
             }
             var temp = eventInfo[data.room_id]
             temp.room_id = data.room_id

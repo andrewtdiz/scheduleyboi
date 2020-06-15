@@ -94,6 +94,13 @@ export default new Vuex.Store({
       }
       this._vm.$socket.emit('sendAva',temp)
     },
+    sendActualTime(state,val){
+      var temp = {
+        room_id: state.room_id,
+        time: val,
+      }
+      this._vm.$socket.emit('sendAva',temp)
+    },
     removeFromSelected(state, ind) {
       state.selected.splice(ind,1)
     },
