@@ -40,6 +40,10 @@ io.on('connection',(socket) => {
         socket.emit('makeRoom',{room_id:temp})
     })
 
+    socket.on('passwordCheck', (data)=>{
+        console.log(data.username + " tried to log in with: " + data.password)
+        socket.emit('passwordCheck','1')
+    })
     socket.on('joinRoom', (data)=>{
         try{
             console.log('You joined creebo!')
@@ -47,7 +51,9 @@ io.on('connection',(socket) => {
             socket.leave(socket.room);
             socket.join(data.room_id);
             socket.room = data.room_id;
-            socket.user_id = data.user_id
+            if (!socket.user_id){
+                socket.user_id = data.user_id
+            }
             eventInfo[data.room_id].users[data.user_id] = {}
             if (data.username){
                 eventInfo[data.room_id].users[data.user_id].username = data.username
@@ -93,6 +99,7 @@ io.on('connection',(socket) => {
         console.log("Looking for User: " + JSON.stringify(data))
         eventInfo[data.room_id].users[data.user_id].username = data.username
         eventInfo[data.room_id].users[data.user_id].color = data.color
+        socket.user_id = data.user_id
         socket.broadcast.to(socket.room).emit('updateUser',eventInfo[data.room_id].users)
     })
 

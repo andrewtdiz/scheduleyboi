@@ -10,7 +10,11 @@ export default new Vuex.Store({
   state: {
     draggingStart: false,
     draggingEnd: false,
+    colors: ['bg-blue-500', 'bg-yellow-500', 'bg-red-500', 'bg-green-500', 'bg-indigo-500', 'bg-orange-500', 'bg-pink-500'],
+    color: 'bg-indigo-500',
+    password: '',
     selected: [],
+    passwordCheck: false,
     chat: [],
     time: {},
     userArray: [],
@@ -28,7 +32,18 @@ export default new Vuex.Store({
 
   },
   getters: {
-    
+    getColors(state) {
+      return state.colors
+    },
+    getColor(state) {
+      return state.color
+    },
+    getPasswordCheck(state){
+      return state.passwordCheck
+    },
+    getUsername(state) {
+      return state.username
+    },
     getUserArray(state){
       return state.userArray
     },
@@ -127,6 +142,15 @@ export default new Vuex.Store({
     setUserId(state,val){
       state.user_id = val
     },
+    setColor(state,val){
+      state.color = val
+    },
+    setPassword(state,val){
+      state.password = val
+    },
+    setUsername(state,val){
+      state.username = val
+    },
     setDraggingEnd(state, val) {
       state.draggingEnd = val
     },
@@ -150,6 +174,27 @@ export default new Vuex.Store({
     },
     changeEndTime(state, val) {
       state.endTimeSelected = val 
+    },
+    checkPassword(state,password){
+      state.password = password
+      var temp = {
+        user_id: state.user_id,
+        username: state.username,
+        color: state.color,
+        password: password
+      }
+      this._vm.$socket.emit('passwordCheck',temp)
+    },
+    pushUser(state){
+      var temp = {
+        user_id: state.user_id,
+        username: state.username,
+        color: state.color,
+        password: state.password
+      }
+      if (state.checkPassword){
+        this._vm.$socket.emit('updateUser',temp)
+      }
     },
     makeRoom(state){
       var tempS = []
@@ -184,6 +229,11 @@ export default new Vuex.Store({
     //Socket Handlers
     SOCKET_makeRoom(state,data){
       router.push('/' + data.room_id)
+    },
+    SOCKET_passwordCheck(state,data){
+      if (data == '1'){
+        state.passwordCheck = true
+      }
     },
     SOCKET_joinRoom(state,data){
       state.selected = []

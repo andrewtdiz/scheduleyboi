@@ -196,9 +196,6 @@ export default {
     chats() {
       setTimeout(() => this.$refs['chatScroll'].scrollTop = this.$refs['chatScroll'].scrollHeight, 100)
     },
-    user_id(){
-      localStorage.user_id = this.user_id
-    }
   },
   created() {
     this.$store.commit('setTimeCreated', moment())
@@ -207,9 +204,9 @@ export default {
     //   temp.user_id = this.user_id
     // }
     this.$socket.emit('joinRoom',temp)
-    console.log("tanjie: ")
-    console.log(moment.tz.names())
-    console.log(moment.tz.guess())
+    // console.log("tanjie: ")
+    // console.log(moment.tz.names())
+    // console.log(moment.tz.guess())
     // for (let i=0; i< this.numDates; i++){
     //   this.selectedSample.push(moment().clone().add(i, 'days'))
     // }
