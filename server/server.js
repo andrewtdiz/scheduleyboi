@@ -79,7 +79,7 @@ io.on('connection',(socket) => {
         console.log("PUPPYYYYYYYY: " + data.user_id)
         eventInfo[data.room_id].time[socket.user_id] = data.time
         var temp = {}
-        temp[socket.user_id] = data.time
+        temp[data.user_id] = data.time
         console.log(temp)
         socket.broadcast.to(socket.room).emit('sendAva',temp)
     })

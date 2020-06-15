@@ -79,21 +79,21 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    flipTime(state,val) {
-      if ((((state.time[state.user_index] >> val)% 2) == 0)){
-        let temp = state.time[state.user_index] + 2**val
-        state.time.splice(state.user_index, 1, temp)
+    // flipTime(state,val) {
+    //   if ((((state.time[state.user_index] >> val)% 2) == 0)){
+    //     let temp = state.time[state.user_index] + 2**val
+    //     state.time.splice(state.user_index, 1, temp)
 
-      }else{
-        let temp = state.time[state.user_index] - 2**val
-        state.time.splice(state.user_index, 1, temp)
-      }
-      var temp = {
-        room_id: state.room_id,
-        time: state.time[state.user_index],
-      }
-      this._vm.$socket.emit('sendAva',temp)
-    },
+    //   }else{
+    //     let temp = state.time[state.user_index] - 2**val
+    //     state.time.splice(state.user_index, 1, temp)
+    //   }
+    //   var temp = {
+    //     room_id: state.room_id,
+    //     time: state.time[state.user_index],
+    //   }
+    //   this._vm.$socket.emit('sendAva',temp)
+    // },
     sendActualTime(state,val){
       var temp = {
         room_id: state.room_id,
@@ -101,6 +101,10 @@ export default new Vuex.Store({
         user_id: state.user_id
       }
       console.log(state.time[state.user_id])
+      Vue.set(state.time,state.user_id,val)
+      val.forEach((element,index) => {
+        Vue.set(state.time[state.user_id],index,element)
+      });
       this._vm.$socket.emit('sendAva',temp)
     },
     setActualTime(state,data){
@@ -216,7 +220,6 @@ export default new Vuex.Store({
         }
       });
       state.user_index = state.userArray.indexOf(state.user_id)
-      state.time[state.user_id] = 0
       console.log(state)
     },
     // SOCKET_sendAva(state,data){
