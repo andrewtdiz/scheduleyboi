@@ -118,7 +118,7 @@ export default {
   @import url('https://fonts.googleapis.com/css?family=Varela+Round');
 
   #app {
-    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    font-family: 'Inter', Helvetica, Arial, sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;

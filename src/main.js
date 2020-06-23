@@ -13,7 +13,7 @@ Vue.component(formatDistance)
 Vue.component(subDays)
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO('http://172.6.249.239:4000'), //options object is Optional
+  connection: SocketIO('https://172.6.249.239'), //options object is Optional
   vuex: {
     store,
     actionPrefix: "SOCKET_",
