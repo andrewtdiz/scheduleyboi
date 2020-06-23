@@ -14,7 +14,7 @@ export default new Vuex.Store({
     color: 'bg-indigo-500',
     password: '',
     selected: [],
-    passwordCheck: true,
+    passwordCheck: false,
     chat: [],
     time: {},
     userArray: [],
