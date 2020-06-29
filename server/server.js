@@ -18,7 +18,6 @@ app.get('/', (req, res) => {
 	// console.log(req.headers)
 });
 
-var events = {}
 var eventInfo = {}
 var users = {}
 
@@ -43,8 +42,13 @@ io.on('connection',(socket) => {
 
     socket.on('passwordCheck', (data)=>{
         console.log(data.username + " tried to log in with: " + data.password)
-        if (data.username && data.color && data.user_id){
+        if (data.user_id==" "){
+            data.user_id = makeid()
+            socket.user_id = data.user_id
+        }
+        if (data.username && data.color){
             socket.emit('passwordCheck','1')
+            socket.emit('userInformation',data)
         }else{
             socket.emit('passwordCheck','0')
         }

@@ -299,6 +299,11 @@ export default new Vuex.Store({
         Vue.set(state.users, user_id, data[user_id])
       });
     },
+    SOCKET_userInformation(state,data){
+      Object.keys(data).forEach(key => {
+        Vue.set(state, key, data[key])
+      });
+    },
     SOCKET_sendChat(state,data){
       data.reverse().forEach(element => {
         element.timestamp = moment(element.timestamp)

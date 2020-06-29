@@ -1,5 +1,36 @@
 <template>
   <div class="pt-24 w-full flex flex-col items-center" >
+    <div v-if="!check" class="absolute flex justify-center items-center top-0 h-full w-screen" style="z-index: 10000">
+      <div class=" absolute w-full h-full bg-black opacity-75">
+        
+      </div>
+      <div class="z-10 bg-white px-12 py-6 rounded shadow-lg" style="width: 30%">
+        <p class="text-4xl text-gray-800">Insert Username</p>
+        <div class="h-12 w-full flex justify-center">
+          <div class="h-full flex justify-center items-center opacity-100">
+            <div @click="$store.commit('setColor', colorRef)" v-for="(colorRef, ind) in colors" :key="ind+44" :class="color==colorRef ? ['border-black', colorRef] : ['border-white', colorRef]" class="h-8 w-8 hover:opacity-75 cursor-pointer rounded-full border shadow-md mx-2">
+
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center mb-2 mt-4">
+          <p class="w-32">Username: </p>
+          <input  type="text" placeholder="Message" class="px-2 mr-2 py-2 outline-none border border-gray-300 focus:border-gray-600 rounded appearance-none flex-1" v-model="username2" @change="$store.commit('setUsername', username)" >
+
+        </div>
+        <div class="flex items-center">
+          <p class="w-32">Password: <br> <span class='text-sm'>(optional)</span> </p>
+          <input  type="text" placeholder="Message" class="px-2 mr-2 py-2 outline-none border border-gray-300 focus:border-gray-600 rounded appearance-none flex-1" v-model="password" >
+
+        </div>
+        <div class="flex justify-end">
+          <button class="bg-indigo-500 hover:bg-indigo-600 text-white mt-6 ml-auto px-4 py-2 rounded" @click="checkPassword">Save</button>
+
+        </div>
+      </div>
+    </div>
+
+
     <div class=" flex flex-col items-center w-full">
       <div class="flex w-3/4 justify-between items-start">
          <div class="flex  flex-col items-start w-full">
@@ -107,6 +138,8 @@ export default {
       numDates: 7,
       userTime: 2,
       currentTimezone: 0,
+      username2: '',
+      password: '',
      
       timeZones: [
         {
@@ -153,7 +186,13 @@ export default {
           result += characters.charAt(Math.floor(Math.random() * charactersLength));
       }
       return result;
-    }
+    },
+    checkPassword(){
+      this.$store.commit('checkPassword', this.password)
+    },
+    pushUser(){
+      this.$store.commit('pushUser')
+    },
   },
   computed: {
     userArray(){
@@ -187,6 +226,18 @@ export default {
     showWarning(){
       return this.$store.getters.getShowWarning
     },
+    color() {
+      return this.$store.getters.getColor
+    },  
+    check() {
+      return this.$store.getters.getPasswordCheck
+    }, 
+    username() {
+      return this.$store.getters.getUsername
+    },      
+    colors() {
+      return this.$store.getters.getColors
+    },
   },
   watch: {
     userTime () {
@@ -196,14 +247,13 @@ export default {
     chats() {
       setTimeout(() => this.$refs['chatScroll'].scrollTop = this.$refs['chatScroll'].scrollHeight, 100)
     },
+    check(){
+      var temp = {room_id: this.$route.params.id, user_id: this.user_id}
+      this.$socket.emit('joinRoom',temp)
+    }
   },
   created() {
     this.$store.commit('setTimeCreated', moment())
-    var temp = {room_id: this.$route.params.id, user_id: this.makeid()}
-    // if (this.user_id){
-    //   temp.user_id = this.user_id
-    // }
-    this.$socket.emit('joinRoom',temp)
     // console.log("tanjie: ")
     // console.log(moment.tz.names())
     // console.log(moment.tz.guess())
