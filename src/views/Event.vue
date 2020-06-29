@@ -94,7 +94,7 @@
           <div ref="chatScroll" class="overflow-y-scroll" id="style-2" style='height: 45vh'>
             <div class=" flex flex-col mt-4 mx-4" v-for="(msg, ind) in chats" :key="ind+99">
               <div class="flex items-start">
-                <div class="h-6 w-6 rounded bg-indigo-500 mt-1"></div>
+                <div class="h-6 w-6 rounded mt-1"  :class="users[msg.user_id].color"></div>
                 <div class="flex flex-col items-start">
                   <div class="flex items-baseline">
                     <p class="font-bold text-md  rounded pl-2 pr-2" >{{users[msg.user_id].username}}</p>
@@ -248,7 +248,7 @@ export default {
       setTimeout(() => this.$refs['chatScroll'].scrollTop = this.$refs['chatScroll'].scrollHeight, 100)
     },
     check(){
-      var temp = {room_id: this.$route.params.id, user_id: this.user_id}
+      var temp = {room_id: this.$route.params.id, user_id: this.user_id, color: this.color, username: this.username}
       this.$socket.emit('joinRoom',temp)
     }
   },

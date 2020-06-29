@@ -177,7 +177,11 @@ export default {
         changeTime(col,row){
             console.log(col,row)
             // console.log(this.timesData)
-            this.timesData.splice(col, 1, ((((this.timesData[col] >> (row))% 2) == 0)) ? this.timesData[col]+2**row : this.timesData[col]-2**row)
+            if (this.timesData[col] == null){
+                this.timesData.splice(col, 1, 0)
+            }else{
+                this.timesData.splice(col, 1, ((((this.timesData[col] >> (row))% 2) == 0)) ? this.timesData[col]+2**row : this.timesData[col]-2**row)
+            }
         }
        
     },
