@@ -183,6 +183,7 @@ export default new Vuex.Store({
         color: state.color,
         password: password
       }
+      window.console.log("Checking password: " + temp)
       this._vm.$socket.emit('passwordCheck',temp)
     },
     pushUser(state){

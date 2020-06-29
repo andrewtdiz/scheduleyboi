@@ -43,7 +43,11 @@ io.on('connection',(socket) => {
 
     socket.on('passwordCheck', (data)=>{
         console.log(data.username + " tried to log in with: " + data.password)
-        socket.emit('passwordCheck','1')
+        if (data.username && data.color && data.user_id){
+            socket.emit('passwordCheck','1')
+        }else{
+            socket.emit('passwordCheck','0')
+        }
     })
     socket.on('joinRoom', (data)=>{
         try{
@@ -126,7 +130,7 @@ io.on('connection',(socket) => {
 
 })
 
-makeid = function() {
+let makeid = function() {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
