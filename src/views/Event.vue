@@ -15,7 +15,7 @@
         </div>
         <div class="flex items-center mb-2 mt-4">
           <p class="w-32">Username: </p>
-          <input  type="text" placeholder="Message" class="px-2 mr-2 py-2 outline-none border border-gray-300 focus:border-gray-600 rounded appearance-none flex-1" v-model="username2" @change="$store.commit('setUsername', username)" >
+          <input  type="text" placeholder="Message" class="px-2 mr-2 py-2 outline-none border border-gray-300 focus:border-gray-600 rounded appearance-none flex-1" v-model="username2" @change="$store.commit('setUsername', username2)" >
 
         </div>
         <div class="flex items-center">

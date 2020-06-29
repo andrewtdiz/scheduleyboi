@@ -232,7 +232,10 @@ export default new Vuex.Store({
       router.push('/' + data.room_id)
     },
     SOCKET_passwordCheck(state,data){
-      if (data == '1'){
+      if (data.check == '1'){
+        state.username = data.username
+        state.user_id = data.user_id
+        state.password = data.password
         state.passwordCheck = true
         var temp = {}
         temp.room_id = state.room_id
@@ -297,11 +300,6 @@ export default new Vuex.Store({
     SOCKET_updateUser(state,data){
       Object.keys(data).forEach(user_id => {
         Vue.set(state.users, user_id, data[user_id])
-      });
-    },
-    SOCKET_userInformation(state,data){
-      Object.keys(data).forEach(key => {
-        Vue.set(state, key, data[key])
       });
     },
     SOCKET_sendChat(state,data){

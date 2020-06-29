@@ -47,10 +47,11 @@ io.on('connection',(socket) => {
             socket.user_id = data.user_id
         }
         if (data.username && data.color){
-            socket.emit('passwordCheck','1')
-            socket.emit('userInformation',data)
+            data.check = '1'
+            socket.emit('passwordCheck',data)
         }else{
-            socket.emit('passwordCheck','0')
+            data.check = '0'
+            socket.emit('passwordCheck',data)
         }
     })
     socket.on('joinRoom', (data)=>{
